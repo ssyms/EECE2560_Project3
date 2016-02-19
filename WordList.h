@@ -18,10 +18,10 @@ class WordList
     WordList();
 
     //constructor that reads in a word list from a file
-    WordList(String f);
+    WordList(string f);
 
     //returns the word in the list based on given int i
-    String getWord(int i);
+    string getWord(int i);
 
     //overload operator to print out wordlist
     friend ostream& operator << (ostream & ostr, WordList wordObj);
@@ -36,11 +36,11 @@ class WordList
     void quickSort();
 
     //looks up whether a word is on the list and returns the location
-    int lookUp(String word);
+    int lookUp(string word);
 
   private:
     //array to store words in
-    String words[];
+    string words[];
 
 }; //end of WordList
 

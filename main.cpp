@@ -77,7 +77,7 @@ void insertionSort()
 void mergeSort()
 //merge sort function
 {
-  string listA[half] = string* mergeSortHelper( )
+
 }
 
 //------------------Global Operators------------------------

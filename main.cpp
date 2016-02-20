@@ -10,10 +10,11 @@
 #include <cstdlib>
 #include <time.h>    //for making rand() more random
 #include <vector>
-
+#include <string>
+#include <cstring>
 //------------------Test Data----------------------
 
-char gridArray[23][10];
+std::vector< std::vector<char> > gridVector;
 
 char gridArray0[] = {'h','e','l','l','o','g','t','t','s','d'};
 char gridArray1[] = {'y','r','r','a','h','o','s','e','s','s'};
@@ -39,56 +40,55 @@ char gridArray20[] = {'s','b','m','u','i','e','n','f','d','g'};
 char gridArray21[] = {'s','v','m','y','u','a','o','a','d','g'};
 char gridArray22[] = {'a','a','a','a','a','a','r','s','a','d'};
 
-char gridArray = {gridArray0, gridArray1, gridArray2, gridArray3, gridArray4, gridArray5, gridArray6, gridArray7, gridArray8, gridArray9, gridArray10, gridArray11, gridArray12, gridArray13, gridArray14, gridArray15, gridArray16, gridArray17, gridArray18, gridArray19, gridArray20, gridArray21, gridArray22};
-
-string wordListArray[] = {"hello","goodbye","harry","potter","water","monkey","baller","lions","witch","awesom","suprise","bigger","faster","stronger","harder","technology"};
+std::string wordListVectorArray[] = {"hello","goodbye","harry","potter","water","monkey","baller","lions","witch","awesom","suprise","bigger","faster","stronger","harder","technology"};
 
 
 //------------------WordList Functions----------------------
 
-string getWord(int i)
+std::string WordList::getWord(int i)
 //returns a word in the array at the given location
 {
-  return words[i];
+  return wordListVector.at(i);
 }
 
-void insertionSort()
+void WordList::insertionSort()
 //sorts the list using insertion sort
 {
 
-  for(int i = 1; i < words.size(); i++)
+  for(int i = 1; i < wordListVector.size(); i++)
   //outer loop to go through each word
   {
-    String key = words[i];
+    std::string key = wordListVector.at(i);
     int j = i - 1;
 
-    while ((j > 0) && (words[j] > key)
+    while ((j > 0) && (wordListVector.at(j) > key))
     //while word is greater than the key
     {
-      words[(j + 1)] = words[j]
+      wordListVector.assign((j + 1), (wordListVector.at(j)));
       j = j - 1;
     }
 
-    words[(j + 1)] = key;
+    wordListVector[(j + 1)] = key;
   } //end of for loop for insertion sort
 
 }
 
-void mergeSort()
+void WordList::mergeSort()
 //merge sort function
 {
 
 }
 
 //------------------Global Operators------------------------
-ostream& operator << (ostream & ostr, WordList wordObj)
+std::ostream& operator << (std::ostream & ostr, WordList wordObj)
 //overload << operator for WordList
 {
-  for(int i = 0; i < words.size(); i++)
+  for(int i = 0; i < wordObj.wordListVector.size(); i++)
   //prints out each word in list
   {
-    ostr << wordObj.getWord(i) << endl;
+    ostr << wordObj.getWord(i) << std::endl;
   }
+  return ostr;
 }
 
 //------------------Main Function--------------------------

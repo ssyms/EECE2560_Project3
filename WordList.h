@@ -6,7 +6,13 @@
 //
 // Wordlist header file for homework 3a.
 // Contains declarations for wordlist class.
-using namespace std;
+
+#include <iostream>
+#include <cstdlib>
+#include <string>
+#include <cstring>
+#include <vector>
+
 #ifndef WordList_WordList_h
 #define WordList_WordList_h
 
@@ -18,13 +24,13 @@ class WordList
     WordList();
 
     //constructor that reads in a word list from a file
-    WordList(string f);
+    WordList(std::string f);
 
     //returns the word in the list based on given int i
-    string getWord(int i);
+    std::string getWord(int i);
 
     //overload operator to print out wordlist
-    friend ostream& operator << (ostream & ostr, WordList wordObj);
+    friend std::ostream& operator << (std::ostream & ostr, WordList wordObj);
 
     //sorts word list using insertion sort
     void insertionSort();
@@ -36,11 +42,11 @@ class WordList
     void quickSort();
 
     //looks up whether a word is on the list and returns the location
-    int lookUp(string word);
+    int lookUp(std::string word);
 
   private:
-    //array to store words in
-    string words[];
+    //vector to store words in
+    std::vector< std::string > wordListVector;
 
 }; //end of WordList
 

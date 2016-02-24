@@ -73,11 +73,40 @@ void WordList::insertionSort()
 
 }
 
-void WordList::mergeSort()
-//merge sort function
+/*void merge()
 {
 
 }
+
+void mergeSortHelper(std::vector< std::string >* a)
+//returns a sorted list
+{
+  int size = a.size();
+  if(size == 1) return;
+  int midPoint = size/2;
+  std::vector< std::string > left(a.begin(), a.begin() + midPoint);
+  std::vector< std::string > right(a.begin() + midPoint + 1, a.end());
+  mergeSortHelper(left);
+  mergeSortHelper(right);
+  merge();
+
+}*/
+
+void WordList::mergeSort()
+//merge sort function
+{
+  /*int size = wordListVector.size();
+  if(size == 1) return;
+  int midPoint = size/2;
+  std::vector< std::string > left(wordListVector.begin(), wordListVector.begin() + midPoint);
+  std::vector< std::string > right(wordListVector.begin() + midPoint + 1, wordListVector.end());
+  mergeSortHelper(left);
+  mergeSortHelper(right);
+  merge();*/
+
+}
+
+
 
 //------------------Global Operators------------------------
 std::ostream& operator << (std::ostream & ostr, WordList wordObj)

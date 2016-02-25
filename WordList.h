@@ -12,6 +12,7 @@
 #include <string>
 #include <cstring>
 #include <vector>
+#include <fstream>
 
 #ifndef WordList_WordList_h
 #define WordList_WordList_h
@@ -25,6 +26,9 @@ class WordList
 
     //constructor that reads in a word list from a file
     WordList(std::string f);
+
+    //stores a txt file of words in the wordListVector
+    void loadWordList(std::string fileName);
 
     //returns the word in the list based on given int i
     std::string getWord(int i);

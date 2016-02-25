@@ -6,44 +6,59 @@
 //
 // Main program file for homework 3a.
 #include "WordList.h"
+#include "Grid.h"
 #include <iostream>
 #include <cstdlib>
 #include <time.h>    //for making rand() more random
 #include <vector>
 #include <string>
 #include <cstring>
-//------------------Test Data----------------------
+/*
+#include "input15"
+#include "input30"
+#include "input50"
+#include "input250"
+*/
+using namespace std;
 
-std::vector< std::vector<char> > gridVector;
-
-char gridArray0[] = {'h','e','l','l','o','g','t','t','s','d'};
-char gridArray1[] = {'y','r','r','a','h','o','s','e','s','s'};
-char gridArray2[] = {'d','a','d','r','d','o','r','r','q','d'};
-char gridArray3[] = {'s','d','e','e','a','d','s','e','w','d'};
-char gridArray4[] = {'s','e','e','t','e','b','e','u','g','a'};
-char gridArray5[] = {'s','s','s','t','s','y','s','s','p','g'};
-char gridArray6[] = {'i','e','e','o','e','e','f','e','a','r'};
-char gridArray7[] = {'i','b','s','p','e','r','a','e','s','a'};
-char gridArray8[] = {'s','s','e','n','e','m','g','e','s','d'};
-char gridArray9[] = {'s','b','e','t','o','e','u','e','s','g'};
-char gridArray10[] = {'s','y','a','n','e','i','i','e','d','f'};
-char gridArray11[] = {'h','w','k','l','d','e','l','e','d','g'};
-char gridArray12[] = {'e','e','n','i','l','e','i','w','a','c'};
-char gridArray13[] = {'y','u','v','u','d','e','i','e','t','s'};
-char gridArray14[] = {'s','m','v','y','a','e','r','i','o','g'};
-char gridArray15[] = {'s','n','b','u','s','e','w','m','g','g'};
-char gridArray16[] = {'e','t','y','g','o','l','o','n','h','c'};
-char gridArray17[] = {'d','e','r','p','d','e','r','h','a','r'};
-char gridArray18[] = {'s','n','n','o','p','e','e','e','d','g'};
-char gridArray19[] = {'s','n','n','i','o','e','g','d','a','g'};
-char gridArray20[] = {'s','b','m','u','i','e','n','f','d','g'};
-char gridArray21[] = {'s','v','m','y','u','a','o','a','d','g'};
-char gridArray22[] = {'a','a','a','a','a','a','r','s','a','d'};
-
-std::string wordListVectorArray[] = {"hello","goodbye","harry","potter","water","monkey","baller","lions","witch","awesom","suprise","bigger","faster","stronger","harder","technology"};
-
+//------------------Grid Functions--------------------------
+Grid::Grid()
+//default constructor
+{
+    ifstream gridFile;
+    char character;
+    gridFile.open("input15");
+    if (gridFile.is_open())
+    {
+        for (int i = 0; i < 15; i++ )
+        {
+            for (int j = 0; j < 15; j++)
+            {
+                gridFile.get(character);
+                gridMatrix[i][j] = character;
+            }
+        }
+        gridFile.close();
+    }
+}
 
 //------------------WordList Functions----------------------
+
+void WordList::loadWordList(std::string fileName)
+//loads word list
+{
+    ifstream wordListFile;
+    std::string line;
+    wordListFile.open(fileName);
+    if (wordListFile.is_open())
+    {
+        while ( getline(wordListFile,line) )
+        {
+            wordListVector.push_back(line);
+        }
+        wordListFile.close();
+    }
+}
 
 std::string WordList::getWord(int i)
 //returns a word in the array at the given location
@@ -73,9 +88,39 @@ void WordList::insertionSort()
 
 }
 
-/*void merge()
+/*void merge(std::vector< std::string >* a, std::vector< std::string >* left, std::vector< std::string >* right)
 {
-
+    while(*right != NULL || *left != NULL)
+    //while there are still values in separate matrices
+    {
+      if(*right == NULL)
+      //if right vector is empty
+      {
+          *a = *left;
+          *a++;
+          *left++;
+      }
+      else if(*left == NULL)
+      //if left vector is empty, place
+      {
+        *a = *right;
+        *a++;
+        *right++;
+      }
+      else if(*left <= *right)
+      //if the first value in left vector is greater than first value in right
+      {
+          *a = *left;
+          *a++;
+          *left++;
+      } else
+      //else if right is greater than left
+      {
+        *a = *right;
+        *a++;
+        *right++;
+      }
+  }
 }
 
 void mergeSortHelper(std::vector< std::string >* a)
@@ -88,7 +133,7 @@ void mergeSortHelper(std::vector< std::string >* a)
   std::vector< std::string > right(a.begin() + midPoint + 1, a.end());
   mergeSortHelper(left);
   mergeSortHelper(right);
-  merge();
+  merge(a, left, right);
 
 }*/
 

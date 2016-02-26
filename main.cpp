@@ -14,12 +14,6 @@
 #include <string>
 #include <cstring>
 #include <math.h>
-/*
-#include "input15"
-#include "input30"
-#include "input50"
-#include "input250"
-*/
 using namespace std;
 
 //------------------Grid Functions--------------------------
@@ -90,8 +84,8 @@ void WordList::loadWordList(std::string fileName)
 }
 
 void WordList::printWordList(){
-    for (int i = 0; i < wordListVector.size(); i++){
-        cout << wordListVector.at(i) << "\n";
+    for (int i = 0; i < 10; i++){
+        cout << i << ") " << wordListVector.at(i) << "\n";
     }
 }
 
@@ -104,22 +98,28 @@ std::string WordList::getWord(int i)
 void WordList::insertionSort()
 //sorts the list using insertion sort
 {
-
-  for(int i = 1; i < wordListVector.size(); i++)
-  //outer loop to go through each word
-  {
-    std::string key = wordListVector.at(i);
-    int j = i - 1;
-
-    while ((j > 0) && (wordListVector.at(j) > key))
-    //while word is greater than the key
+    std::string key = wordListVector.at(0);
+    cout << wordListVector.size() << "This is the size\n";
+    for(int i = 1; i < wordListVector.size(); i++)
+    //outer loop to go through each word
     {
-      wordListVector.assign((j + 1), (wordListVector.at(j)));
-      j = j - 1;
-    }
+        key = wordListVector.at(i);
+        int j = i - 1;
+        cout << i << "\n";
+        while (j >= 0)
+        //while word is greater than the key
+        {
+            if (wordListVector.at(j) > key)
+            {
+                wordListVector[(j + 1)] = wordListVector.at(j);
+                wordListVector[j] = key;
+                j = j - 1;
+            } else {
+                j = -1;
+            }
+        }
 
-    wordListVector[(j + 1)] = key;
-  } //end of for loop for insertion sort
+    } //end of for loop for insertion sort
 
 }
 
@@ -204,6 +204,13 @@ std::ostream& operator << (std::ostream & ostr, WordList wordObj)
   return ostr;
 }
 
+//------------------Global Functions------------------------
+void FindMatches()
+//function is passed the word list and the grid
+//prints out the word that can be found
+{
+
+}
 //------------------Main Function--------------------------
 
 
@@ -211,9 +218,23 @@ std::ostream& operator << (std::ostream & ostr, WordList wordObj)
 int main()
 //main Function
 {
+    std::cout << "Clock time: " << clock() << std::endl;
+    srand (time(NULL));   //Uses time to make rand more random
+    clock_t t1,t2;
+
+    t1=clock();
+
     Grid newGrid;
     newGrid.printGrid();
     WordList newWords;
     newWords.loadWordList("wordlist.txt");
+    newWords.insertionSort();
     newWords.printWordList();
+
+    t2=clock();
+    float diff = ((float)t2-(float)t1);
+
+    float seconds = diff / CLOCKS_PER_SEC;
+    std::cout << "\n\nRuntime of program: "<< seconds << " seconds\n";
+
 } // end of main function

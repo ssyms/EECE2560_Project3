@@ -125,11 +125,36 @@ void WordList::insertionSort()
 
 int WordList::lookUp(std::string &keyWord, int upperBound, int lowerBound)
 {
-    if (upperBound <= lowerBound){
-        return -1;
+    cout << "\nUpper Bound:" << upperBound;
+    if (upperBound <= lowerBound || upperBound-1 == lowerBound ){
+
+        if (1)
+        //if the bounds have crossed, then the function did not find the keyWord
+        {
+            std::string currentField = wordListVector[upperBound];
+            int i = 0;
+            cout << currentField << "\n";
+            //iterate through the string and check for a partial match
+            //this will help the FindMatches function with backtracking
+
+            while (keyWord[i] == currentField[i]){
+                cout << "\nThis is equal:" << keyWord[i] << " == " << currentField[i];
+                if (i == keyWord.size()-1)
+                {
+                    cout << "\nThere was a partial match, continuing search";
+                    return -2;
+                }
+                i++;
+            }
+
+            cout << "couldn't find your word";
+            return -1;
+        }
     }
     int mid = lowerBound+((upperBound - lowerBound)/2);
     std::string currentField = wordListVector[mid];
+
+
     if (currentField == keyWord)
     {
         cout << "The Word was found!";
@@ -258,8 +283,8 @@ int main()
     newWords.loadWordList("wordlist.txt");
     newWords.insertionSort();
     newWords.printWordList();
-    std::string theKey = "zori";
-    cout << newWords.lookUp(theKey, newWords.getWordListVectorSize(), 0);
+    std::string theKey = "ab";
+    cout << newWords.lookUp(theKey, newWords.getWordListVectorSize()-1, 0);
 
     t2=clock();
     float diff = ((float)t2-(float)t1);

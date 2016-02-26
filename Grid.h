@@ -26,9 +26,12 @@ class Grid
 
     Grid(std::string fileName);
 
+    void printGrid();
+
   private:
     //vector to store words in
-    char gridMatrix[15][15];
+    char** gridMatrix;
+    int gridSize;
 
 }; //end of WordList
 

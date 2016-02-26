@@ -13,6 +13,7 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#include <math.h>
 /*
 #include "input15"
 #include "input30"
@@ -26,19 +27,43 @@ Grid::Grid()
 //default constructor
 {
     ifstream gridFile;
-    char character;
+    char character = ' ';
+
+    //Change these two lines to change the grid size
     gridFile.open("input15");
+    gridSize = 15;
+
+    gridMatrix = new char*[gridSize];
+    for (int k = 0; k < gridSize; k++){
+        gridMatrix[k] = new char[gridSize];
+    }
     if (gridFile.is_open())
     {
-        for (int i = 0; i < 15; i++ )
+        while (int(character) != 10){
+            gridFile.get(character);
+        }
+        for (int i = 0; i < gridSize; i++ )
         {
-            for (int j = 0; j < 15; j++)
+            for (int j = 0; j < gridSize; j++)
             {
-                gridFile.get(character);
+                character = ' ';
+                while (int(character) == int(' ') || int(character) == 10){
+                    gridFile.get(character);
+                }
                 gridMatrix[i][j] = character;
             }
         }
         gridFile.close();
+    }
+}
+
+void Grid::printGrid(){
+    cout << "\n";
+    for (int i = 0; i < gridSize; i++){
+        for (int j = 0; j < gridSize; j++){
+            cout << gridMatrix[i][j] << " ";
+        }
+        cout << "\n";
     }
 }
 
@@ -88,7 +113,8 @@ void WordList::insertionSort()
 
 }
 
-/*void merge(std::vector< std::string >* a, std::vector< std::string >* left, std::vector< std::string >* right)
+/*
+void merge(std::vector< std::string >* a, std::vector< std::string >* left, std::vector< std::string >* right)
 {
     while(*right != NULL || *left != NULL)
     //while there are still values in separate matrices
@@ -121,11 +147,12 @@ void WordList::insertionSort()
         *right++;
       }
   }
-}
+}*/
 
 void mergeSortHelper(std::vector< std::string >* a)
 //returns a sorted list
 {
+/*
   int size = a.size();
   if(size == 1) return;
   int midPoint = size/2;
@@ -134,20 +161,22 @@ void mergeSortHelper(std::vector< std::string >* a)
   mergeSortHelper(left);
   mergeSortHelper(right);
   merge(a, left, right);
-
-}*/
+*/
+}
 
 void WordList::mergeSort()
 //merge sort function
 {
-  /*int size = wordListVector.size();
+    /*
+  int size = wordListVector.size();
   if(size == 1) return;
   int midPoint = size/2;
   std::vector< std::string > left(wordListVector.begin(), wordListVector.begin() + midPoint);
   std::vector< std::string > right(wordListVector.begin() + midPoint + 1, wordListVector.end());
   mergeSortHelper(left);
   mergeSortHelper(right);
-  merge();*/
+  merge();
+  */
 
 }
 
@@ -172,5 +201,8 @@ std::ostream& operator << (std::ostream & ostr, WordList wordObj)
 int main()
 //main Function
 {
+    Grid newGrid;
+    newGrid.printGrid();
+
 
 } // end of main function

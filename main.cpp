@@ -69,6 +69,10 @@ void Grid::printGrid(){
 
 //------------------WordList Functions----------------------
 
+WordList::WordList(){
+
+}
+
 void WordList::loadWordList(std::string fileName)
 //loads word list
 {
@@ -82,6 +86,12 @@ void WordList::loadWordList(std::string fileName)
             wordListVector.push_back(line);
         }
         wordListFile.close();
+    }
+}
+
+void WordList::printWordList(){
+    for (int i = 0; i < wordListVector.size(); i++){
+        cout << wordListVector.at(i) << "\n";
     }
 }
 
@@ -203,6 +213,7 @@ int main()
 {
     Grid newGrid;
     newGrid.printGrid();
-
-
+    WordList newWords;
+    newWords.loadWordList("wordlist.txt");
+    newWords.printWordList();
 } // end of main function

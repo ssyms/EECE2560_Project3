@@ -24,8 +24,8 @@ class WordList
     //default constructor
     WordList();
 
-    //constructor that reads in a word list from a file
-    WordList(std::string f);
+    //Prints out all the words
+    void printWordList();
 
     //stores a txt file of words in the wordListVector
     void loadWordList(std::string fileName);

@@ -84,7 +84,7 @@ void WordList::loadWordList(std::string fileName)
 }
 
 void WordList::printWordList(){
-    for (int i = 0; i < 10; i++){
+    for (int i = 0; i < wordListVector.size(); i++){
         cout << i << ") " << wordListVector.at(i) << "\n";
     }
 }
@@ -122,6 +122,34 @@ void WordList::insertionSort()
     } //end of for loop for insertion sort
 
 }
+
+int WordList::lookUp(std::string &keyWord, int upperBound, int lowerBound)
+{
+    if (upperBound <= lowerBound){
+        return -1;
+    }
+    int mid = lowerBound+((upperBound - lowerBound)/2);
+    std::string currentField = wordListVector[mid];
+    if (currentField == keyWord)
+    {
+        cout << "The Word was found!";
+        return mid;
+    }
+    else
+    {
+        if (currentField > keyWord){
+            return lookUp(keyWord, mid-1, lowerBound);
+        } else {
+            return lookUp(keyWord, upperBound, mid+1);
+        }
+    }
+
+}
+
+int WordList::getWordListVectorSize() const{
+    return wordListVector.size();
+}
+
 
 /*
 void merge(std::vector< std::string >* a, std::vector< std::string >* left, std::vector< std::string >* right)
@@ -230,6 +258,8 @@ int main()
     newWords.loadWordList("wordlist.txt");
     newWords.insertionSort();
     newWords.printWordList();
+    std::string theKey = "zori";
+    cout << newWords.lookUp(theKey, newWords.getWordListVectorSize(), 0);
 
     t2=clock();
     float diff = ((float)t2-(float)t1);

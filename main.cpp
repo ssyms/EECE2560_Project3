@@ -99,13 +99,13 @@ void WordList::insertionSort()
 //sorts the list using insertion sort
 {
     std::string key = wordListVector.at(0);
-    cout << wordListVector.size() << "This is the size\n";
+    cout << "This is the size\n" << wordListVector.size() << endl;
     for(int i = 1; i < wordListVector.size(); i++)
     //outer loop to go through each word
     {
         key = wordListVector.at(i);
         int j = i - 1;
-        cout << i << "\n";
+        //cout << i << "\n";
         while (j >= 0)
         //while word is greater than the key
         {
@@ -125,7 +125,7 @@ void WordList::insertionSort()
 
 int WordList::lookUp(std::string &keyWord, int upperBound, int lowerBound)
 {
-    cout << "\nUpper Bound:" << upperBound;
+    //cout << "\nUpper Bound:" << upperBound;
     if (upperBound <= lowerBound || upperBound-1 == lowerBound ){
 
         if (1)
@@ -133,7 +133,7 @@ int WordList::lookUp(std::string &keyWord, int upperBound, int lowerBound)
         {
             std::string currentField = wordListVector[upperBound];
             int i = 0;
-            cout << currentField << "\n";
+            //cout << currentField << "\n";
             //iterate through the string and check for a partial match
             //this will help the FindMatches function with backtracking
 
@@ -141,13 +141,12 @@ int WordList::lookUp(std::string &keyWord, int upperBound, int lowerBound)
                 cout << "\nThis is equal:" << keyWord[i] << " == " << currentField[i];
                 if (i == keyWord.size()-1)
                 {
-                    cout << "\nThere was a partial match, continuing search";
-                    return -2;
+                    cout << "\nThere was a partial match, continuing search\n";
                 }
                 i++;
             }
 
-            cout << "couldn't find your word";
+            cout << "couldn't find your word\n";
             return -1;
         }
     }
@@ -175,75 +174,132 @@ int WordList::getWordListVectorSize() const{
     return wordListVector.size();
 }
 
-
-/*
-void merge(std::vector< std::string >* a, std::vector< std::string >* left, std::vector< std::string >* right)
+void merge(vector<string>* a, vector<string> left, vector<string> right)
+//void merge(std::vector< std::string>* a, std::vector< std::string>* left, std::vector< std::string>* right)
 {
-    while(*right != NULL || *left != NULL)
+  int totalSize = right.size() + left.size();
+    int leftPlace = 0, rightPlace = 0;
+    while(a->size() < totalSize)
     //while there are still values in separate matrices
     {
-      if(*right == NULL)
-      //if right vector is empty
+      string leftWord = left.at(leftPlace);
+      string rightWord = right.at(rightPlace);
+      if((leftPlace + 1) == left.size())
+      //if all elements from left have been inserted
       {
-          *a = *left;
-          *a++;
-          *left++;
+          a->push_back(rightWord);
+          rightPlace++;
       }
-      else if(*left == NULL)
+      else if((rightPlace + 1) == right.size())
       //if left vector is empty, place
       {
-        *a = *right;
-        *a++;
-        *right++;
+          a->push_back(leftWord);
+          leftPlace++;
       }
-      else if(*left <= *right)
+      else if( leftWord <= rightWord)
       //if the first value in left vector is greater than first value in right
       {
-          *a = *left;
-          *a++;
-          *left++;
+          a->push_back(leftWord);
+          leftPlace++;
       } else
       //else if right is greater than left
       {
-        *a = *right;
-        *a++;
-        *right++;
+        a->push_back(rightWord);
+        rightPlace++;
       }
   }
-}*/
+}
 
-void mergeSortHelper(std::vector< std::string >* a)
+void mergeSortHelper(vector<string>* a)
 //returns a sorted list
 {
-/*
-  int size = a.size();
+
+  int size = a->size();
   if(size == 1) return;
   int midPoint = size/2;
-  std::vector< std::string > left(a.begin(), a.begin() + midPoint);
-  std::vector< std::string > right(a.begin() + midPoint + 1, a.end());
-  mergeSortHelper(left);
-  mergeSortHelper(right);
+  vector<string> left(a->begin(), a->begin() + midPoint);
+  vector<string> right(a->begin() + midPoint + 1, a->end());
+  //mergeSortHelper(&left);
+  //mergeSortHelper(&right);
   merge(a, left, right);
-*/
+
 }
 
 void WordList::mergeSort()
 //merge sort function
 {
-    /*
+
   int size = wordListVector.size();
   if(size == 1) return;
   int midPoint = size/2;
-  std::vector< std::string > left(wordListVector.begin(), wordListVector.begin() + midPoint);
-  std::vector< std::string > right(wordListVector.begin() + midPoint + 1, wordListVector.end());
-  mergeSortHelper(left);
-  mergeSortHelper(right);
-  merge();
-  */
-
+  vector<string> left(wordListVector.begin(), wordListVector.begin() + midPoint);
+  vector<string> right(wordListVector.begin() + midPoint + 1, wordListVector.end());
+  mergeSortHelper(&left);
+  mergeSortHelper(&right);
+  merge(&wordListVector, left, right);
 }
 
+void quickHelper(vector<string>* a, int left, int right)
+//helper for recursion in quicksort
+{
+      int i = left, j = right;
+      string tmp;
+      string pivot = a->at((left + right) / 2);
 
+      //partition
+      while (i <= j)
+      {
+            while (a->at(i) < pivot)
+                  i++;
+            while (a->at(j) > pivot)
+                  j--;
+
+            if (i <= j)
+            {
+                  tmp = a->at(i);
+                  a->at(i) = a->at(j);
+                  a->at(j) = tmp;
+                  i++;
+                  j--;
+            }
+      }
+
+      if (left < j)
+            quickHelper(a, left, j);
+      if (i < right)
+            quickHelper(a, i, right);
+}
+
+void WordList::quickSort()
+//quicksort function
+{
+    int left = 0;
+    int right = wordListVector.size() - 1;
+    int i = left, j = right;
+    string tmp;
+    string pivot = wordListVector.at((left + right) / 2);
+
+    //partition
+    while (i <= j) {
+          while (wordListVector.at(i) < pivot)
+                i++;
+          while (wordListVector.at(j) > pivot)
+                j--;
+          if (i <= j) {
+                tmp = wordListVector.at(i);
+                wordListVector.at(i) = wordListVector.at(j);
+                wordListVector.at(j) = tmp;
+                i++;
+                j--;
+
+          }
+    }
+
+    if (left < j)
+          quickHelper(&wordListVector, left, j);
+    if (i < right)
+          quickHelper(&wordListVector, i, right);
+}
 
 //------------------Global Operators------------------------
 std::ostream& operator << (std::ostream & ostr, WordList wordObj)
@@ -271,6 +327,7 @@ void FindMatches()
 int main()
 //main Function
 {
+
     std::cout << "Clock time: " << clock() << std::endl;
     srand (time(NULL));   //Uses time to make rand more random
     clock_t t1,t2;
@@ -281,7 +338,9 @@ int main()
     newGrid.printGrid();
     WordList newWords;
     newWords.loadWordList("wordlist.txt");
-    newWords.insertionSort();
+    //newWords.insertionSort();
+    // newWords.mergeSort();
+    newWords.quickSort();
     newWords.printWordList();
     std::string theKey = "ab";
     cout << newWords.lookUp(theKey, newWords.getWordListVectorSize()-1, 0);

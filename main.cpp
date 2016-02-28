@@ -146,7 +146,7 @@ int Grid::getGridSize()
     return gridSize;
 }
 
-char Grid::getGridCharacterAt(int &row, int &col) const
+char Grid::getGridCharacterAt(int row, int col) const
 //returns character in grid
 {
     return gridMatrix[row][col];
@@ -321,7 +321,7 @@ std::string Grid::getStringFromGrid(int row, int col, int dir, int length) const
             while (gridString.size() <= length)
             //while the string is less than or equal to length of word
             {
-                if ((row - i) < 0)
+                if (row - i < 0)
                 //resets row
                 {
                         i = 0;
@@ -472,14 +472,14 @@ int WordList::lookUp(std::string &keyWord, int upperBound, int lowerBound)
             //iterate through the string and check for a partial match
             //this will help the FindMatches function with backtracking
             int i = 0;
-            int edgeCaseAdjustment;
+            int edgeCaseAdjustment = 0;
 
             if (lowerBound == 0)
             //edge case - first word in list
             {
                 edgeCaseAdjustment = 1;
             }
-            else if (lowerBound == getListSize() - 1)
+            else if (lowerBound >= getListSize() - 1)
             //edge case - last word in list
             {
                 edgeCaseAdjustment = -2;
@@ -732,20 +732,105 @@ void Search(int searchChoice)
 
     float totalTime = ((float)t2 - (float)t1) / CLOCKS_PER_SEC;
     float sortTime = ((float)t4 - (float)t3) / CLOCKS_PER_SEC;
-    float findTime = ((float)t2 - (float)t1) / CLOCKS_PER_SEC;
+    float findTime = ((float)t6 - (float)t5) / CLOCKS_PER_SEC;
 
     cout << "\nTotal time in seconds: " << totalTime << endl;
     cout << "Sorting time in seconds: " << sortTime << endl;
     cout << "finding time in seconds: " << findTime << endl;
 
 } //end of search function
+
+//------------------Test Functions--------------------------
+void testGridLoadedCorrectly(Grid testGrid)
+//prints grid, check to see if it looks right
+{
+    testGrid.printGrid();
+}
+
+void testWordListLoadedCorrectly(WordList testWordList)
+//prints WordList, check to see if it looks right
+{
+    testWordList.printWordList();
+}
+
+void testWordsSorted(WordList testWordList)
+//checks to make sure every word is greater than its predecesor
+{
+    bool pass = true;
+    for (int i = 0; i < testWordList.getListSize()-1; i++){
+        if (testWordList.getWord(i) > testWordList.getWord(i+1)){
+            cout << "\nSort Algorithm Failed";
+            pass = false;
+        }
+    }
+    if (pass == true)
+    {
+        cout << "\nThe sorting algorithm worked correctly";
+    }
+}
+
+void testLookUp(WordList testWordList)
+//test the three casses for the lookUp Function
+//1) returns -1 when no word found
+//2) returns -2 when a partial match exists
+//3) returns value greater than zero when match is found
+{
+    std::string testKey1 = "nothere";
+    std::string testKey2 = "amazo";
+    std::string testKey3 = "disestablishment";
+
+    if (testWordList.lookUp(testKey1, testWordList.getListSize(), 0) == -1)
+    //test for proper response to nonexistent word
+    {
+        cout << "\nlookUp function passed test 1";
+    } else {
+        cout << "\nlookUp function FAILED test 1";
+    }
+
+    if (testWordList.lookUp(testKey2, testWordList.getListSize(), 0) == -2)
+    //test for proper response to partially found word
+    {
+        cout << "\nlookUp function passed test 2";
+    } else {
+        cout << "\nlookUp function FAILED test 2";
+    }
+
+    if (testWordList.lookUp(testKey3, testWordList.getListSize(), 0) >= 0)
+    //test for proper response found word
+    {
+        cout << "\nlookUp function passed test 3";
+    } else {
+        cout << "\nlookUp function FAILED test 3";
+    }
+
+}
+
+
 //------------------Main Function--------------------------
-
-
 
 int main()
 //main Function
 {
+    //TESTING
+
+    //Test Grid Loaded
+    Grid testGrid(250);
+    testGridLoadedCorrectly(testGrid);
+
+    //Test Words Loaded
+    WordList newWords;
+    newWords.loadWordList("wordlist.txt");
+    testWordListLoadedCorrectly(newWords);
+
+    //Test words sorted
+    newWords.quickSort();
+    testWordsSorted(newWords);
+
+    //Test Look up Function
+    testLookUp(newWords);
+
+
+
 
     int sortChoice = 1;
     cout << "\nHi! Which type of sort would you like to implement?\n";
@@ -755,5 +840,6 @@ int main()
     cout << "\nIntegers only please!\n";
     cin >> sortChoice;
     Search(sortChoice);
+
 
 } // end of main function

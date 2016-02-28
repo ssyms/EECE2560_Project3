@@ -30,7 +30,7 @@ class Grid
 
     int getGridSize();
 
-    char getGridCharacterAt(int &row, int &col) const;
+    char getGridCharacterAt(int row, int col) const;
 
     std::string getStringFromGrid(int row, int col, int dir, int length) const;
 

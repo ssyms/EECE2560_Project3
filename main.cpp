@@ -491,13 +491,24 @@ void FindMatches(WordList &wordListObj, Grid &gridObj)
 
     for (int i = 0; i < gridObj.getGridSize(); i++){
         for (int j =0; j < gridObj.getGridSize(); j++){
+
             std::string theKey(1,gridObj.getGridCharacterAt(i,j));
+
             location = wordListObj.lookUp(theKey, wordListObj.getWordListVectorSize()-1, 0);
+
             if (location >= 0){
                 cout << wordListObj.getWord(location) << "\n";
             } else if(location == -2){
                 while (location == -2){
                     stringLength += 1;
+                    for (int k = 0; k < 8; k++){
+                        theKey = gridObj.getStringFromGrid(i, j, k, stringLength);
+                        location = wordListObj.lookUp(theKey, wordListObj.getWordListVectorSize()-1, 0);
+                        //Last thought before quitting for the night
+                        //I need to make a vector that stores all the directions that I
+                        //no longer need to check, thus saving a binary search. Use the
+                        //index of the vector for each direction. will make sense tomorrow!
+                    }
 
 
                 }

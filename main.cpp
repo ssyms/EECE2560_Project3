@@ -618,6 +618,24 @@ std::ostream& operator << (std::ostream & ostr, WordList wordObj)
 } //end of << overload
 
 //------------------Global Functions------------------------
+bool isOnList(string s, vector<string> foundWords)
+//checks if given word is on a list of words
+{
+      for  (int z = 0; z < foundWords.size(); z++)
+      //checks if it is on the list
+      {
+          if (s == foundWords[z])
+          //if it is on the list
+          {
+              z = foundWords.size();
+              return true;
+          }
+
+      } //end of for loop to check if it's on the list
+
+      return false;
+}
+
 void FindMatches(WordList &listObj, Grid &gridObj)
 //prints out the word that can be found
 {
@@ -657,23 +675,13 @@ void FindMatches(WordList &listObj, Grid &gridObj)
                     if (loc >= 0)
                     //if you found a word
                     {
-                        for  (int z = 0; z < wordsFoundList.size(); z++)
-                        //checks if it is on the list
+                        if(!isOnList(listObj.getWord(loc), wordsFoundList))
+                        //if word is not on the list of already found words
                         {
-                            if (listObj.getWord(loc) == wordsFoundList[z])
-                            //if it is on the list
-                            {
-                                z = wordsFoundList.size();
-                            }
-                            else if (z == wordsFoundList.size() - 1)
-                            //if the word is not on the list...new word
-                            {
-                                wordsFoundList.push_back(listObj.getWord(loc));
-                                cout << "\nFound a new word ";
-                                cout << listObj.getWord(loc);
-                            }
-
-                        } //end of for loop to check if it's on the list
+                          wordsFoundList.push_back(listObj.getWord(loc));
+                          cout << "\nFound a new word ";
+                          cout << listObj.getWord(loc);
+                        }
 
                         loc = -2;
                     } //end of if you found a word
@@ -681,6 +689,7 @@ void FindMatches(WordList &listObj, Grid &gridObj)
                 } //end of while there is a partial match
 
                 stringLength = 3; //resets min length to search new direction
+                loc = -2;
             } //end of for loop to search each direction
 
         } //end of for loop to go through each column
@@ -805,6 +814,50 @@ void testLookUp(WordList testWordList)
 
 }
 
+void testGetGridStrings(Grid testGrid)
+//Test all 8 directions to make sure that the
+//funciton gets the correct strings
+{
+    int length = 8;
+    int row = 0;
+    int col = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        cout << "\nThis is the [0][0]";
+        cout << "\nDirection "<< i << " is equal to '";
+        cout << testGrid.getStringFromGrid(row,col,i,length);
+        cout << "'";
+    }
+    row = 0;
+    col = 14;
+    for (int i = 0; i < 8; i++)
+    {
+        cout << "\nThis is the [0][14]";
+        cout << "\nDirection "<< i << " is equal to '";
+        cout << testGrid.getStringFromGrid(row,col,i,length);
+        cout << "'";
+    }
+    row = 14;
+    col = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        cout << "\nThis is the [14][0]";
+        cout << "\nDirection "<< i << " is equal to '";
+        cout << testGrid.getStringFromGrid(row,col,i,length);
+        cout << "'";
+    }
+    row = 14;
+    col = 14;
+    for (int i = 0; i < 8; i++)
+    {
+        cout << "\nThis is the [14][14]";
+        cout << "\nDirection "<< i << " is equal to '";
+        cout << testGrid.getStringFromGrid(row,col,i,length);
+        cout << "'";
+    }
+
+}
+
 
 //------------------Main Function--------------------------
 
@@ -814,7 +867,7 @@ int main()
     //TESTING
 
     //Test Grid Loaded
-    Grid testGrid(250);
+    Grid testGrid(15);
     testGridLoadedCorrectly(testGrid);
 
     //Test Words Loaded
@@ -829,6 +882,7 @@ int main()
     //Test Look up Function
     testLookUp(newWords);
 
+    testGetGridStrings(testGrid);
 
 
 
@@ -840,6 +894,7 @@ int main()
     cout << "\nIntegers only please!\n";
     cin >> sortChoice;
     Search(sortChoice);
+
 
 
 } // end of main function

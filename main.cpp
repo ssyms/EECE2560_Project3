@@ -146,18 +146,18 @@ int Grid::getGridSize()
     return gridSize;
 }
 
-char Grid::getGridCharacterAt(int &row, int &column) const
+char Grid::getGridCharacterAt(int &row, int &col) const
 //returns character in grid
 {
-    return gridMatrix[row][column];
+    return gridMatrix[row][col];
 }
 
-std::string Grid::getStringFromGrid(int row, int column, int direction, int length) const
+std::string Grid::getStringFromGrid(int row, int col, int dir, int length) const
 //returns a string from the grid
 {
-    std::string gridString(1, gridMatrix[row][column]);
+    std::string gridString(1, gridMatrix[row][col]);
 
-    switch (direction)
+    switch (dir)
     //switches so that it searches completely around word
     {
         case 0:
@@ -168,19 +168,19 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
             while (gridString.size() <= length)
             //while the string is less than or equal to length of word
             {
-                if (i + column >= gridSize)
+                if (i + col >= gridSize)
                 //resets column size when it reaches the end
                 {
                         i = 0;
-                        column = 0;
+                        col = 0;
                 }
 
-                gridString += gridMatrix[(row)][(column + i)];
+                gridString += gridMatrix[(row)][(col + i)];
                 i++;
             } //end of while loop to go through string
 
             break;
-        }
+        } //end of east case
 
         case 1:
         //get the SoutEast direction string
@@ -190,132 +190,186 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
             while (gridString.size() <= length)
             //while the string is less than or equal to length of word
             {
-                if (i + column >= gridSize){
+                if (i + col >= gridSize)
+                //resets column
+                {
                         i = 0;
-                        column = 0;
+                        col = 0;
                 }
-                if (j+row >= gridSize){
+
+                if (j + row >= gridSize)
+                //resets row
+                {
                         j = 0;
                         row = 0;
                 }
-                gridString += gridMatrix[(row + j)][(column + i)];
+
+                gridString += gridMatrix[(row + j)][(col + i)];
                 i++;
                 j++;
-            }
-            break;
-        }
-        case 2:
-        {
-            //get the South direction string
-            int i = 1;
-            while (gridString.size() <= length)
-            {
-                if (i + row >= gridSize){
-                        i = 0;
-                        row = 0;
-                }
-                gridString += gridMatrix[(row + i)][column];
-                i++;
-            }
-            break;
-        }
-        case 3:
-        {
-            //get the SouthWest direction string
-            int i = 1;
-            int j = 1;
-            while (gridString.size() <= length)
-            {
-                if (column - i < 0){
-                        i = 0;
-                        column = gridSize - 1;
-                }
-                if (j + row >= gridSize){
-                        j = 0;
-                        row = 0;
-                }
-                gridString += gridMatrix[(row + j)][(column - i)];
-                i++;
-                j++;
-            }
+            }//end of while loop to go through string
 
             break;
-        }
-        case 4:
+        } //end of southeast case
+        case 2:
+        //get the South direction string
         {
-            //get the West direction string
             int i = 1;
+
             while (gridString.size() <= length)
+            //while the string is less than or equal to length of word
             {
-                if ((column - i) < 0){
+                if (i + row >= gridSize)
+                //resets row
+                {
                         i = 0;
-                        column = gridSize - 1;
+                        row = 0;
                 }
-                gridString += gridMatrix[(row)][(column - i)];
+
+                gridString += gridMatrix[(row + i)][col];
                 i++;
-            }
+            } //end of while loop to go through string
+
             break;
-        }
-        case 5:
+        } //end of south case
+        case 3:
+        //get the SouthWest direction string
         {
-            //get the NorthWest direction string
             int i = 1;
             int j = 1;
+
             while (gridString.size() <= length)
+            //while the string is less than or equal to length of word
             {
-                if (column - i < 0){
+                if (col - i < 0)
+                //resets column
+                {
                         i = 0;
-                        column = gridSize-1;
+                        col = gridSize - 1;
                 }
-                if (row - j < 0){
+
+                if (j + row >= gridSize)
+                //resets row
+                {
+                        j = 0;
+                        row = 0;
+                }
+                gridString += gridMatrix[(row + j)][(col - i)];
+                i++;
+                j++;
+            } //end of while loop to go through string
+
+            break;
+        } //end of southwest case
+        case 4:
+        //get the West direction string
+        {
+            int i = 1;
+
+            while (gridString.size() <= length)
+            //while the string is less than or equal to length of word
+            {
+                if ((col - i) < 0)
+                //resets column
+                {
+                        i = 0;
+                        col = gridSize - 1;
+                }
+
+                gridString += gridMatrix[(row)][(col - i)];
+                i++;
+            } //end of while loop to go through string
+
+            break;
+        } //end of west case
+        case 5:
+        //get the NorthWest direction string
+        {
+            int i = 1;
+            int j = 1;
+
+            while (gridString.size() <= length)
+            //while the string is less than or equal to length of word
+            {
+                if ((col - i) < 0)
+                //resets column
+                {
+                        i = 0;
+                        col = gridSize - 1;
+                }
+
+                if ((row - j) < 0)
+                //resets row
+                {
                         j = 0;
                         row = gridSize-1;
                 }
-                gridString += gridMatrix[(row - j)][(column - i)];
+
+                gridString += gridMatrix[(row - j)][(col - i)];
                 i++;
                 j++;
-            }
+            } //end of while loop to go through string
+
             break;
-        }
+        } //end of northwest case
         case 6:
+        //get the North direction string
         {
             //get the North direction string
             int i = 1;
+
             while (gridString.size() <= length)
+            //while the string is less than or equal to length of word
             {
-                if (row - i < 0){
+                if ((row - i) < 0)
+                //resets row
+                {
                         i = 0;
                         row = gridSize - 1;
                 }
-                gridString += gridMatrix[(row - i)][(column)];
+
+                gridString += gridMatrix[(row - i)][(col)];
                 i++;
-            }
+            } //end of while loop to go through string
+
             break;
-        }
+        }   //end of north case
         case 7:
+        //get the NorthEast direction string
         {
-            //get the NorthEast direction string
             int i = 1;
             int j = 1;
+
             while (gridString.size() <= length)
+            //while the string is less than or equal to length of word
             {
-                if (column + i >= gridSize){
+                if ((col + i) >= gridSize)
+                //resets column
+                {
                         i = 0;
-                        column = 0;
+                        col = 0;
                 }
-                if (row - j < 0){
+
+                if (row - j < 0)
+                //resets row
+                {
                         j = 0;
                         row = gridSize - 1;
                 }
-                gridString += gridMatrix[(row - j)][(column + i)];
+
+                gridString += gridMatrix[(row - j)][(col + i)];
                 i++;
                 j++;
-            }
+            } //end of while loop to go through string
+
             break;
-        }
-    }
+        } //end of northeast case
+
+    } //end of switch statement
+
     return gridString;
-}
+
+} //end of getStringFromGri function
 //------------------WordList Functions----------------------
 
 WordList::WordList()
@@ -330,15 +384,20 @@ void WordList::loadWordList(std::string fileName)
     ifstream wordListFile;
     std::string line;
     wordListFile.open(fileName);
+
     if (wordListFile.is_open())
+    //checks that file is open
     {
-        while ( getline(wordListFile,line) )
+        while (getline(wordListFile,line))
+        //while there are new lines in the file
         {
             wordListVector.push_back(line);
         }
+
         wordListFile.close();
-    }
-}
+    } //end of if for open file
+
+} //end of load word list function
 
 void WordList::printWordList()
 //prints word list
@@ -384,6 +443,7 @@ void WordList::insertionSort()
             {
                 j = -1;
             }
+
             cout << "\n" << i;
 
         } //end of while loop for greater than
@@ -393,167 +453,79 @@ void WordList::insertionSort()
 } //end of intertion sort
 
 int WordList::lookUp(std::string &keyWord, int upperBound, int lowerBound)
+//word list look up function returns location of word on a list
 {
-    int mid = lowerBound+((upperBound - lowerBound)/2);
+    int mid = lowerBound + ((upperBound - lowerBound) / 2);
     std::string currentField = wordListVector[mid];
+
     if (currentField == keyWord)
+    //if you found the word
     {
         return mid;
     }
     else
+    //else keep looking
     {
-        if (upperBound <= lowerBound)
-
+        if(upperBound <= lowerBound)
+        //if top of list is less than or equal to lower list
         {
             //iterate through the string and check for a partial match
             //this will help the FindMatches function with backtracking
             int i = 0;
-            int edgeCaseAdjustment = -1;
-            if (lowerBound == 0){
+            int edgeCaseAdjustment;
+
+            if (lowerBound == 0)
+            //edge case - first word in list
+            {
                 edgeCaseAdjustment = 1;
-            } else if (lowerBound == getWordListVectorSize()-1)
+            }
+            else if (lowerBound == getListSize() - 1)
+            //edge case - last word in list
             {
                 edgeCaseAdjustment = -2;
-            }
-            for (int j = edgeCaseAdjustment; j < edgeCaseAdjustment+3; j++){
+            } //end of edge case if statements
+
+            for (int j = edgeCaseAdjustment; j < edgeCaseAdjustment + 3; j++)
+            //when there is a partial match
+            {
                 currentField = wordListVector[(j+lowerBound)];
                 i = 0;
-                while (keyWord[i] == currentField[i]){
-                    if (i == keyWord.size()-1)
+
+                while (keyWord[i] == currentField[i])
+                //while the word matches partially
+                {
+                    if (i == keyWord.size() - 1)
+                    //return int to indicate partial match
                     {
                         return -2;
                     }
+
                     i++;
-                }
-            }
+                } //end of while loop
+
+            } //end of for loop
+
             return -1;
-        }
-        if (currentField > keyWord){
-            return lookUp(keyWord, mid-1, lowerBound);
-        } else {
-            return lookUp(keyWord, upperBound, mid+1);
-        }
-    }
+        } //end of upperBoud <=owerBound
 
-}
-
-int WordList::getWordListVectorSize() const{
-    return wordListVector.size();
-}
-
-void merge(vector<string>* a, vector<string> left, vector<string> right)
-//void merge(std::vector< std::string>* a, std::vector< std::string>* left, std::vector< std::string>* right)
-{       if(left.size() == 1 && right.size() == 1)
-        //if there is only one word in each vector
+        if (currentField > keyWord)
+        //if word looking up is greater than keyword, search lower part of list
         {
-            if(left.at(0) < right.at(0))
-            //if left word is less than right word
-            {
-                a->at(0) = left.at(0);
-                a->at(1) = right.at(0);
-            }
-            else if(left.at(0) >= right.at(0))
-            {
-                a->at(1) = left.at(0);
-                a->at(0) = right.at(0);
-            }
+            return lookUp(keyWord, mid - 1, lowerBound);
         }
         else
+        //if keyword is greater than current word, search last half of list
         {
-            int leftPlace = 0, rightPlace = 0, place = 0;
-            int left_end = left.size();
-            int right_end = right.size();
-            while(leftPlace != left_end)
-            {
-              if(left.at(leftPlace) < right.at(rightPlace) &&
-                (rightPlace == right_end)) {
-                  a->at(place) = left.at(leftPlace);
-                  leftPlace++;
-              }
-              else
-              {
-                  a->at(place) = right.at(rightPlace);
-                  rightPlace++;
-              }
-              place++;
-            }
+            return lookUp(keyWord, upperBound, mid + 1);
+        } //end of recursive
+    }
 
-            while(rightPlace == right_end) {
-              a->at(place) = right.at(rightPlace);
-              rightPlace++;
-              place++;
-            }
-        }
-        /*int totalSize = right.size() + left.size();
-        cout << totalSize << endl;
-        int leftPlace = 0, rightPlace = 0, place = 0;
-        while(place < (totalSize-2))
-        //while there are still values in separate matrices
-        {
-          string leftWord = left.at(leftPlace);
-          string rightWord = right.at(rightPlace);
-          cout << "\nright" << rightWord;
-          cout << "\nleft" << leftWord;
-          if((leftPlace) == left.size())
-          //if all elements from left have been inserted
-          {
+} //end of lookup function
 
-              a->at(place) = rightWord;
-              rightPlace++;
-          }
-          else if((rightPlace) == right.size())
-          //if left vector is empty, place
-          {
-              a->at(place) = leftWord;
-              leftPlace++;
-          }
-          else if( leftWord <= rightWord)
-          //if the first value in left vector is less than first value in right
-          {
-              a->at(place) = leftWord;
-              leftPlace++;
-          } else
-          //else if right is less than than left
-          {
-            a->at(place) = rightWord;
-            rightPlace++;
-          }
-          for (int i = 0; i < a->size(); i++){
-              cout << i << ") " << a->at(i) << "\n";
-          }
-          place++;
-      }*/
-}
-
-
-void mergeSortHelper(vector<string>* a)
-//returns a sorted list
+int WordList::getListSize() const
+//returns size of wordlist
 {
-
-  int size = a->size();
-  if(size == 1) return;
-  if(size == 0) return;
-  int midPoint = size/2;
-  vector<string> left(a->begin(), a->begin() + midPoint);
-  vector<string> right(a->begin() + midPoint + 1, a->end());
-  mergeSortHelper(&left);
-  mergeSortHelper(&right);
-  merge(a, left, right);
-
-}
-
-void WordList::mergeSort()
-//merge sort function
-{
-
-  int size = wordListVector.size();
-  if(size == 0) return;
-  int midPoint = size/2;
-  vector<string> left(wordListVector.begin(), wordListVector.begin() + midPoint + 1);
-  vector<string> right(wordListVector.begin() + midPoint + 1, wordListVector.end());
-  mergeSortHelper(&left);
-  mergeSortHelper(&right);
-  merge(&wordListVector, left, right);
+    return wordListVector.size();
 }
 
 void quickHelper(vector<string>* a, int left, int right)
@@ -566,12 +538,14 @@ void quickHelper(vector<string>* a, int left, int right)
       //partition
       while (i <= j)
       {
-            while (a->at(i) < pivot)
+            while (a->at(i) < pivot) //determines how many are less than pivot
                   i++;
-            while (a->at(j) > pivot)
+
+            while (a->at(j) > pivot) //determines how many are more than pivot
                   j--;
 
             if (i <= j)
+            //checks how the list was divided around pivot, inserts in list
             {
                   tmp = a->at(i);
                   a->at(i) = a->at(j);
@@ -582,10 +556,12 @@ void quickHelper(vector<string>* a, int left, int right)
       }
 
       if (left < j)
-            quickHelper(a, left, j);
+            quickHelper(a, left, j); //recurs on quickHelper
+
       if (i < right)
-            quickHelper(a, i, right);
-}
+            quickHelper(a, i, right);   //recurs on quickHelper
+
+} //end of quick helper
 
 void WordList::quickSort()
 //quicksort function
@@ -597,119 +573,125 @@ void WordList::quickSort()
     string pivot = wordListVector.at((left + right) / 2);
 
     //partition
-    while (i <= j) {
-          while (wordListVector.at(i) < pivot)
+    while (i <= j)
+    //while size of left is less than size of right
+    {
+          while (wordListVector.at(i) < pivot) //counts strings less than pivot
                 i++;
-          while (wordListVector.at(j) > pivot)
+
+          while (wordListVector.at(j) > pivot) //strings greater than pivot
                 j--;
-          if (i <= j) {
+
+          if (i <= j)
+          //if left is less than right
+          {
                 tmp = wordListVector.at(i);
                 wordListVector.at(i) = wordListVector.at(j);
                 wordListVector.at(j) = tmp;
                 i++;
                 j--;
 
-          }
-    }
+          } //end of if left is less than right
 
-    if (left < j)
+    } //end of while left is less than right
+
+    if (left < j)   //if left size is less than number less than pivot
           quickHelper(&wordListVector, left, j);
-    if (i < right)
+
+    if (i < right)  //if right size is less than number greater than pivot
           quickHelper(&wordListVector, i, right);
-}
+
+} //end of quicksort
 
 //------------------Global Operators------------------------
 std::ostream& operator << (std::ostream & ostr, WordList wordObj)
 //overload << operator for WordList
 {
+
   for(int i = 0; i < wordObj.wordListVector.size(); i++)
   //prints out each word in list
   {
     ostr << wordObj.getWord(i) << std::endl;
   }
+
   return ostr;
-}
+} //end of << overload
 
 //------------------Global Functions------------------------
-void FindMatches(WordList &wordListObj, Grid &gridObj)
-//function is passed the word list and the grid
+void FindMatches(WordList &listObj, Grid &gridObj)
 //prints out the word that can be found
 {
     std::vector< std::string > wordsFoundList;
     std::string first = "";
     wordsFoundList.push_back(first);
 
-    int location = -1;
-    int stringLength = 3;
+    int loc = -1;
+    int stringLength = 3; //ensures minimum stringLength found is 5
     int loopCounter = 0;
     int loopCounter1 = 0;
+
     for (int i = 0; i < gridObj.getGridSize(); i++)
     //for the number of rows
     {
-        for (int j =0; j < gridObj.getGridSize(); j++)
-
+        for (int j = 0; j < gridObj.getGridSize(); j++)
+        //for number of columns
         {
             loopCounter1++;
-            location = -1;
+            loc = -1;
 
             std::string theKey(1,gridObj.getGridCharacterAt(i,j));
 
-            location = wordListObj.lookUp(theKey, wordListObj.getWordListVectorSize()-1, 0);
-            if (location == -1){
-                cout << "\nthe key that doesn't have any letters: " << theKey;
-            }
-            /*
-            if (location >= 0){
-                for  (int z = 0; z < wordsFoundList.size(); z++ ){
-                    if ((wordListObj.getWord(location) == wordsFoundList[z])){
-                        z = wordsFoundList.size();
-                    } else if (z == wordsFoundList.size()-1){
-                        wordsFoundList.push_back(wordListObj.getWord(location));
-                        cout << "\nFound a new word " << wordListObj.getWord(location) << " Hooray!";
-                    }
-                }
-            }*/
-            location = -2;
+            loc = -2;
+
             for (int k = 0; k < 8; k++)
+            //for each direction around a letter
             {
                 loopCounter++;
-                while (location == -2)
+                while (loc == -2)
+                //while there is a partial word match
                 {
                     stringLength += 1;
                     theKey = gridObj.getStringFromGrid(i, j, k, stringLength);
-                    location = wordListObj.lookUp(theKey, wordListObj.getWordListVectorSize()-1, 0);
+                    loc = listObj.lookUp(theKey, listObj.getListSize() - 1, 0);
 
-                    if (location >= 0)
+                    if (loc >= 0)
+                    //if you found a word
                     {
-                        for  (int z = 0; z < wordsFoundList.size(); z++ ){
-                            if ((wordListObj.getWord(location) == wordsFoundList[z])){
+                        for  (int z = 0; z < wordsFoundList.size(); z++)
+                        //checks if it is on the list
+                        {
+                            if (listObj.getWord(loc) == wordsFoundList[z])
+                            //if it is on the list
+                            {
                                 z = wordsFoundList.size();
-                            } else if (z == wordsFoundList.size()-1){
-                                wordsFoundList.push_back(wordListObj.getWord(location));
-                                cout << "\nFound a new word '" << wordListObj.getWord(location) << "' Hooray!";
                             }
-                        }
-                        location = -2;
-                    }
-                    //Last thought before quitting for the night
-                    //I need to make a vector that stores all the directions that I
-                    //no longer need to check, thus saving a binary search. Use the
-                    //index of the vector for each direction. will make sense tomorrow!
-                }
-                stringLength = 3;
-            }
+                            else if (z == wordsFoundList.size() - 1)
+                            //if the word is not on the list...new word
+                            {
+                                wordsFoundList.push_back(listObj.getWord(loc));
+                                cout << "\nFound a new word ";
+                                cout << listObj.getWord(loc);
+                            }
 
+                        } //end of for loop to check if it's on the list
 
-        }
-    }
-    cout << "\nThe loop ran " << loopCounter1 << " times!";
-    cout << "\nThe inner loop ran " << loopCounter << " times!";
+                        loc = -2;
+                    } //end of if you found a word
+
+                } //end of while there is a partial match
+
+                stringLength = 3; //resets min length to search new direction
+            } //end of for loop to search each direction
+
+        } //end of for loop to go through each column
+
+    } //end of for loop to go through each row
     cout << "\nWe found " << wordsFoundList.size()-1 << " words!";
 
-        //cout << wordListObj.lookUp(theKey, newWords.getWordListVectorSize()-1, 0);
-}
+} //end of findMatches
 
 void Search(int searchChoice)
+//searches through wordlist and grid to find matches
 {
     int fileNumber = 250;
     cout << "\nWhich word puzzle would you like to search?\n";
@@ -726,18 +708,21 @@ void Search(int searchChoice)
     //Use user input to choose search
     {
         case 1:
+        //insertion sort case
         {
             t3 = clock();
             newWords.insertionSort();
             t4 = clock();
         }
         case 2:
+        //quicksort case
         {
             t3 = clock();
             newWords.quickSort();
             t4 = clock();
         }
-    }
+
+    } //end of switch statement based on sorting algorithm
 
     t5 = clock();
     FindMatches(newWords, newGrid);
@@ -745,15 +730,15 @@ void Search(int searchChoice)
 
     t2 = clock();
 
-    float totalTime = ((float)t2-(float)t1) / CLOCKS_PER_SEC;
-    float sortTime = ((float)t4-(float)t3) / CLOCKS_PER_SEC;
-    float findTime = ((float)t2-(float)t1) / CLOCKS_PER_SEC;
+    float totalTime = ((float)t2 - (float)t1) / CLOCKS_PER_SEC;
+    float sortTime = ((float)t4 - (float)t3) / CLOCKS_PER_SEC;
+    float findTime = ((float)t2 - (float)t1) / CLOCKS_PER_SEC;
 
     cout << "\nTotal time in seconds: " << totalTime << endl;
     cout << "Sorting time in seconds: " << sortTime << endl;
     cout << "finding time in seconds: " << findTime << endl;
 
-}
+} //end of search function
 //------------------Main Function--------------------------
 
 

@@ -36,7 +36,7 @@ class WordList
     //overload operator to print out wordlist
     friend std::ostream& operator << (std::ostream & ostr, WordList wordObj);
 
-    int getWordListVectorSize() const;
+    int getListSize() const;
 
     //sorts word list using insertion sort
     void insertionSort();

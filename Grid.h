@@ -30,9 +30,9 @@ class Grid
 
     int getGridSize();
 
-    char getGridCharacterAt(int &row, int &column) const;
+    char getGridCharacterAt(int &row, int &col) const;
 
-    std::string getStringFromGrid(int row, int column, int direction, int length) const;
+    std::string getStringFromGrid(int row, int col, int dir, int length) const;
 
   private:
     //vector to store words in

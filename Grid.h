@@ -24,7 +24,7 @@ class Grid
     //default constructor
     Grid();
 
-    Grid(std::string fileName);
+    Grid(int userSize);
 
     void printGrid();
 

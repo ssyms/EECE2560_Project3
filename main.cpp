@@ -9,7 +9,7 @@
 #include "Grid.h"
 #include <iostream>
 #include <cstdlib>
-#include <time.h>    //for making rand() more random
+#include <time.h>
 #include <vector>
 #include <string>
 #include <cstring>
@@ -68,6 +68,60 @@ Grid::Grid()
 
 } //end of grid constructor
 
+Grid::Grid(int userGrid)
+//default constructor
+{
+    ifstream gridFile;
+    char character = ' ';
+    string in = "input";
+    std::string s = std::to_string(userGrid);
+
+    string fileName = in + s;
+    //Change these two lines to change the grid size
+    gridFile.open(fileName);
+    gridSize = userGrid;
+
+    gridMatrix = new char*[gridSize];
+    for (int k = 0; k < gridSize; k++)
+    //creates a pointer array inside each element of the first pointer array
+    {
+        gridMatrix[k] = new char[gridSize];
+    }
+
+    if (gridFile.is_open())
+    //open the file
+    {
+
+        while (int(character) != 10)
+        //gets character until new line
+        {
+            gridFile.get(character);
+        }
+
+        for (int i = 0; i < gridSize; i++ )
+        //goes through each row
+        {
+
+            for (int j = 0; j < gridSize; j++)
+            //goes through each column
+            {
+                character = ' ';
+
+                while (int(character) == int(' ') || int(character) == 10)
+                //when the character equals space or new line, grabs new char
+                {
+                    gridFile.get(character);
+                }
+
+                gridMatrix[i][j] = character;
+            } //end of going through column
+        } //end of going through rows
+
+        gridFile.close();
+    } //end of if file is open
+
+} //end of grid constructor
+
 void Grid::printGrid()
 //prints out the grid
 {
@@ -80,8 +134,10 @@ void Grid::printGrid()
         {
             cout << gridMatrix[i][j] << " ";
         }
+
         cout << "\n";
-    }
+    } //end of for loop to print each row
+
 } //end of print grid
 
 int Grid::getGridSize()
@@ -96,33 +152,45 @@ char Grid::getGridCharacterAt(int &row, int &column) const
     return gridMatrix[row][column];
 }
 
-std::string Grid::getStringFromGrid(int row, int column, int direction, int length) const{
+std::string Grid::getStringFromGrid(int row, int column, int direction, int length) const
+//returns a string from the grid
+{
     std::string gridString(1, gridMatrix[row][column]);
+
     switch (direction)
+    //switches so that it searches completely around word
     {
         case 0:
         //get the East direction string
         {
             int i = 1;
+
             while (gridString.size() <= length)
+            //while the string is less than or equal to length of word
             {
-                if (i+column >= gridSize){
+                if (i + column >= gridSize)
+                //resets column size when it reaches the end
+                {
                         i = 0;
                         column = 0;
                 }
-                gridString += gridMatrix[(row)][(column+i)];
+
+                gridString += gridMatrix[(row)][(column + i)];
                 i++;
-            }
+            } //end of while loop to go through string
+
             break;
         }
+
         case 1:
         //get the SoutEast direction string
         {
             int i = 1;
             int j = 1;
             while (gridString.size() <= length)
+            //while the string is less than or equal to length of word
             {
-                if (i+column >= gridSize){
+                if (i + column >= gridSize){
                         i = 0;
                         column = 0;
                 }
@@ -130,7 +198,7 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
                         j = 0;
                         row = 0;
                 }
-                gridString += gridMatrix[(row+j)][(column+i)];
+                gridString += gridMatrix[(row + j)][(column + i)];
                 i++;
                 j++;
             }
@@ -142,11 +210,11 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
             int i = 1;
             while (gridString.size() <= length)
             {
-                if (i+row >= gridSize){
+                if (i + row >= gridSize){
                         i = 0;
                         row = 0;
                 }
-                gridString += gridMatrix[(row+i)][column];
+                gridString += gridMatrix[(row + i)][column];
                 i++;
             }
             break;
@@ -158,11 +226,11 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
             int j = 1;
             while (gridString.size() <= length)
             {
-                if (column-i < 0){
+                if (column - i < 0){
                         i = 0;
-                        column = gridSize-1;
+                        column = gridSize - 1;
                 }
-                if (j+row >= gridSize){
+                if (j + row >= gridSize){
                         j = 0;
                         row = 0;
                 }
@@ -179,7 +247,7 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
             int i = 1;
             while (gridString.size() <= length)
             {
-                if ((column-i) < 0){
+                if ((column - i) < 0){
                         i = 0;
                         column = gridSize - 1;
                 }
@@ -195,15 +263,15 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
             int j = 1;
             while (gridString.size() <= length)
             {
-                if (column-i < 0){
+                if (column - i < 0){
                         i = 0;
                         column = gridSize-1;
                 }
-                if (row-j < 0){
+                if (row - j < 0){
                         j = 0;
                         row = gridSize-1;
                 }
-                gridString += gridMatrix[(row-j)][(column-i)];
+                gridString += gridMatrix[(row - j)][(column - i)];
                 i++;
                 j++;
             }
@@ -215,11 +283,11 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
             int i = 1;
             while (gridString.size() <= length)
             {
-                if (row-i < 0){
+                if (row - i < 0){
                         i = 0;
-                        row = gridSize-1;
+                        row = gridSize - 1;
                 }
-                gridString += gridMatrix[(row-i)][(column)];
+                gridString += gridMatrix[(row - i)][(column)];
                 i++;
             }
             break;
@@ -231,15 +299,15 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
             int j = 1;
             while (gridString.size() <= length)
             {
-                if (column+i >= gridSize){
+                if (column + i >= gridSize){
                         i = 0;
                         column = 0;
                 }
-                if (row-j < 0){
+                if (row - j < 0){
                         j = 0;
-                        row = gridSize-1;
+                        row = gridSize - 1;
                 }
-                gridString += gridMatrix[(row-j)][(column+i)];
+                gridString += gridMatrix[(row - j)][(column + i)];
                 i++;
                 j++;
             }
@@ -572,7 +640,7 @@ void FindMatches(WordList &wordListObj, Grid &gridObj)
     wordsFoundList.push_back(first);
 
     int location = -1;
-    int stringLength = 0;
+    int stringLength = 3;
     int loopCounter = 0;
     int loopCounter1 = 0;
     for (int i = 0; i < gridObj.getGridSize(); i++)
@@ -590,6 +658,7 @@ void FindMatches(WordList &wordListObj, Grid &gridObj)
             if (location == -1){
                 cout << "\nthe key that doesn't have any letters: " << theKey;
             }
+            /*
             if (location >= 0){
                 for  (int z = 0; z < wordsFoundList.size(); z++ ){
                     if ((wordListObj.getWord(location) == wordsFoundList[z])){
@@ -599,7 +668,7 @@ void FindMatches(WordList &wordListObj, Grid &gridObj)
                         cout << "\nFound a new word " << wordListObj.getWord(location) << " Hooray!";
                     }
                 }
-            }
+            }*/
             location = -2;
             for (int k = 0; k < 8; k++)
             {
@@ -617,7 +686,7 @@ void FindMatches(WordList &wordListObj, Grid &gridObj)
                                 z = wordsFoundList.size();
                             } else if (z == wordsFoundList.size()-1){
                                 wordsFoundList.push_back(wordListObj.getWord(location));
-                                cout << "\nFound a new word " << wordListObj.getWord(location) << " Hooray!";
+                                cout << "\nFound a new word '" << wordListObj.getWord(location) << "' Hooray!";
                             }
                         }
                         location = -2;
@@ -627,7 +696,7 @@ void FindMatches(WordList &wordListObj, Grid &gridObj)
                     //no longer need to check, thus saving a binary search. Use the
                     //index of the vector for each direction. will make sense tomorrow!
                 }
-                stringLength = 0;
+                stringLength = 3;
             }
 
 
@@ -635,9 +704,55 @@ void FindMatches(WordList &wordListObj, Grid &gridObj)
     }
     cout << "\nThe loop ran " << loopCounter1 << " times!";
     cout << "\nThe inner loop ran " << loopCounter << " times!";
-    cout << "\nWe found " << wordsFoundList.size() << " words!";
+    cout << "\nWe found " << wordsFoundList.size()-1 << " words!";
 
         //cout << wordListObj.lookUp(theKey, newWords.getWordListVectorSize()-1, 0);
+}
+
+void Search(int searchChoice)
+{
+    int fileNumber = 250;
+    cout << "\nWhich word puzzle would you like to search?\n";
+    cout << "Your options are 15, 30, 50 or 250. Integers only please!\n";
+    cin >> fileNumber;
+
+    std::cout << "Clock time: " << clock() << std::endl;
+    clock_t t1,t2, t3, t4, t5, t6;
+    t1 = clock();
+    Grid newGrid(fileNumber);
+    WordList newWords;
+    newWords.loadWordList("wordlist.txt");
+    switch (searchChoice)
+    //Use user input to choose search
+    {
+        case 1:
+        {
+            t3 = clock();
+            newWords.insertionSort();
+            t4 = clock();
+        }
+        case 2:
+        {
+            t3 = clock();
+            newWords.quickSort();
+            t4 = clock();
+        }
+    }
+
+    t5 = clock();
+    FindMatches(newWords, newGrid);
+    t6 = clock();
+
+    t2 = clock();
+
+    float totalTime = ((float)t2-(float)t1) / CLOCKS_PER_SEC;
+    float sortTime = ((float)t4-(float)t3) / CLOCKS_PER_SEC;
+    float findTime = ((float)t2-(float)t1) / CLOCKS_PER_SEC;
+
+    cout << "\nTotal time in seconds: " << totalTime << endl;
+    cout << "Sorting time in seconds: " << sortTime << endl;
+    cout << "finding time in seconds: " << findTime << endl;
+
 }
 //------------------Main Function--------------------------
 
@@ -647,32 +762,13 @@ int main()
 //main Function
 {
 
-    std::cout << "Clock time: " << clock() << std::endl;
-    srand (time(NULL));   //Uses time to make rand more random
-    clock_t t1,t2;
-
-    t1=clock();
-
-    Grid newGrid;
-    WordList newWords;
-
-    newWords.loadWordList("wordlist.txt");
-    newWords.quickSort();
-
-    cout << "\n--- Find Matches Test ---\n";
-    FindMatches(newWords, newGrid);
-    std::string keyWord = "hebetate";
-
-/*Test for lookUP
-    int upperBound = 1000;
-    int lowerBound = 0;
-    cout << newWords.lookUp(keyWord, upperBound, lowerBound);
-*/
-    cout << "\n--- Find Matches Test Complete---\n";
-    t2=clock();
-    float diff = ((float)t2-(float)t1);
-
-    float seconds = diff / CLOCKS_PER_SEC;
-    std::cout << "\n\nRuntime of program: "<< seconds << " seconds\n";
+    int sortChoice = 1;
+    cout << "\nHi! Which type of sort would you like to implement?\n";
+    cout << "Your options are:";
+    cout << "\n1) Insertion Sort";
+    cout << "\n2) Quick Sort";
+    cout << "\nIntegers only please!\n";
+    cin >> sortChoice;
+    Search(sortChoice);
 
 } // end of main function

@@ -77,48 +77,151 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
         case 0:
         //get the East direction string
         {
-            for (int i = 1; gridString.size() <= length; i++){
-                gridString += gridMatrix[(row)][column+i];
+            int i = 1;
+            while (gridString.size() <= length)
+            {
+                if (i+column >= gridSize){
+                        i = 0;
+                        column = 0;
+                }
+                gridString += gridMatrix[(row)][(column+i)];
+                i++;
             }
             break;
         }
         case 1:
         //get the SoutEast direction string
         {
-
+            int i = 1;
+            int j = 1;
+            while (gridString.size() <= length)
+            {
+                if (i+column >= gridSize){
+                        i = 0;
+                        column = 0;
+                }
+                if (j+row >= gridSize){
+                        j = 0;
+                        row = 0;
+                }
+                gridString += gridMatrix[(row+j)][(column+i)];
+                i++;
+                j++;
+            }
             break;
         }
         case 2:
         {
             //get the South direction string
+            int i = 1;
+            while (gridString.size() <= length)
+            {
+                if (i+row >= gridSize){
+                        i = 0;
+                        row = 0;
+                }
+                gridString += gridMatrix[(row+i)][column];
+                i++;
+            }
             break;
         }
         case 3:
         {
             //get the SouthWest direction string
+            int i = 1;
+            int j = 1;
+            while (gridString.size() <= length)
+            {
+                if (column-i < 0){
+                        i = 0;
+                        column = gridSize-1;
+                }
+                if (j+row >= gridSize){
+                        j = 0;
+                        row = 0;
+                }
+                gridString += gridMatrix[(row+j)][(column-i)];
+                i++;
+                j++;
+            }
             break;
         }
         case 4:
         {
             //get the West direction string
+            int i = 1;
+            while (gridString.size() <= length)
+            {
+                if ((column-i) < 0){
+                        i = 0;
+                        column = gridSize-1;
+                        cout << "\ngridSize" << gridSize;
+                }
+                gridString += gridMatrix[(row)][(column-i)];
+                cout << "\nGridString: " << gridString << "\ngridString.size() = " << gridString.size();
+                i++;
+            }
             break;
         }
         case 5:
         {
             //get the NorthWest direction string
+            int i = 1;
+            int j = 1;
+            while (gridString.size() <= length)
+            {
+                if (column-i < 0){
+                        i = 0;
+                        column = gridSize-1;
+                }
+                if (row-j < 0){
+                        j = 0;
+                        row = gridSize-1;
+                }
+                gridString += gridMatrix[(row-j)][(column-i)];
+                i++;
+                j++;
+            }
             break;
         }
         case 6:
         {
             //get the North direction string
+            int i = 1;
+            while (gridString.size() <= length)
+            {
+                if (row-i < 0){
+                        i = 0;
+                        row = gridSize-1;
+                }
+                gridString += gridMatrix[(row-i)][(column)];
+                i++;
+            }
             break;
         }
         case 7:
         {
             //get the NorthEast direction string
+            int i = 1;
+            int j = 1;
+            while (gridString.size() <= length)
+            {
+                if (column+i >= gridSize){
+                        i = 0;
+                        column = 0;
+                }
+                if (row-j < 0){
+                        j = 0;
+                        row = gridSize-1;
+                }
+                gridString += gridMatrix[(row-j)][(column+i)];
+                i++;
+                j++;
+            }
             break;
         }
     }
+    cout << "\n";
     return gridString;
 }
 //------------------WordList Functions----------------------
@@ -374,9 +477,9 @@ int main()
 
     //test get string from grid funciton
     int newRow = 0;
-    int newCol = 0;
-    int dir = 0;
-    int length = 10;
+    int newCol = 13;
+    int dir = 7;
+    int length = 20;
     cout << "code got here";
     cout << "\nThe grid contains: " << newGrid.getStringFromGrid(newRow, newCol, dir, length);
 

@@ -51,7 +51,9 @@ Grid::Grid()
     }
 }
 
-void Grid::printGrid(){
+void Grid::printGrid()
+//prints out the grid
+{
     cout << "\n";
     for (int i = 0; i < gridSize; i++){
         for (int j = 0; j < gridSize; j++){
@@ -332,39 +334,87 @@ int WordList::getWordListVectorSize() const{
 
 void merge(vector<string>* a, vector<string> left, vector<string> right)
 //void merge(std::vector< std::string>* a, std::vector< std::string>* left, std::vector< std::string>* right)
-{
-  int totalSize = right.size() + left.size();
-    int leftPlace = 0, rightPlace = 0;
-    while(a->size() < totalSize)
-    //while there are still values in separate matrices
-    {
-      string leftWord = left.at(leftPlace);
-      string rightWord = right.at(rightPlace);
-      if((leftPlace + 1) == left.size())
-      //if all elements from left have been inserted
-      {
-          a->push_back(rightWord);
-          rightPlace++;
-      }
-      else if((rightPlace + 1) == right.size())
-      //if left vector is empty, place
-      {
-          a->push_back(leftWord);
-          leftPlace++;
-      }
-      else if( leftWord <= rightWord)
-      //if the first value in left vector is greater than first value in right
-      {
-          a->push_back(leftWord);
-          leftPlace++;
-      } else
-      //else if right is greater than left
-      {
-        a->push_back(rightWord);
-        rightPlace++;
-      }
-  }
+{       if(left.size() == 1 && right.size() == 1)
+        //if there is only one word in each vector
+        {
+            if(left.at(0) < right.at(0))
+            //if left word is less than right word
+            {
+                a->at(0) = left.at(0);
+                a->at(1) = right.at(0);
+            }
+            else if(left.at(0) >= right.at(0))
+            {
+                a->at(1) = left.at(0);
+                a->at(0) = right.at(0);
+            }
+        }
+        else
+        {
+            int leftPlace = 0, rightPlace = 0, place = 0;
+            int left_end = left.size();
+            int right_end = right.size();
+            while(leftPlace != left_end)
+            {
+              if(left.at(leftPlace) < right.at(rightPlace) && (rightPlace == right_end)) {
+                  a->at(place) = left.at(leftPlace);
+                  leftPlace++;
+              }
+              else
+              {
+                  a->at(place) = right.at(rightPlace);
+                  rightPlace++;
+              }
+              place++;
+            }
+
+            while(rightPlace == right_end) {
+              a->at(place) = right.at(rightPlace);
+              rightPlace++;
+              place++;
+            }
+        }
+        /*int totalSize = right.size() + left.size();
+        cout << totalSize << endl;
+        int leftPlace = 0, rightPlace = 0, place = 0;
+        while(place < (totalSize-2))
+        //while there are still values in separate matrices
+        {
+          string leftWord = left.at(leftPlace);
+          string rightWord = right.at(rightPlace);
+          cout << "\nright" << rightWord;
+          cout << "\nleft" << leftWord;
+          if((leftPlace) == left.size())
+          //if all elements from left have been inserted
+          {
+
+              a->at(place) = rightWord;
+              rightPlace++;
+          }
+          else if((rightPlace) == right.size())
+          //if left vector is empty, place
+          {
+              a->at(place) = leftWord;
+              leftPlace++;
+          }
+          else if( leftWord <= rightWord)
+          //if the first value in left vector is less than first value in right
+          {
+              a->at(place) = leftWord;
+              leftPlace++;
+          } else
+          //else if right is less than than left
+          {
+            a->at(place) = rightWord;
+            rightPlace++;
+          }
+          for (int i = 0; i < a->size(); i++){
+              cout << i << ") " << a->at(i) << "\n";
+          }
+          place++;
+      }*/
 }
+
 
 void mergeSortHelper(vector<string>* a)
 //returns a sorted list
@@ -372,11 +422,12 @@ void mergeSortHelper(vector<string>* a)
 
   int size = a->size();
   if(size == 1) return;
+  if(size == 0) return;
   int midPoint = size/2;
   vector<string> left(a->begin(), a->begin() + midPoint);
   vector<string> right(a->begin() + midPoint + 1, a->end());
-  //mergeSortHelper(&left);
-  //mergeSortHelper(&right);
+  mergeSortHelper(&left);
+  mergeSortHelper(&right);
   merge(a, left, right);
 
 }
@@ -386,9 +437,9 @@ void WordList::mergeSort()
 {
 
   int size = wordListVector.size();
-  if(size == 1) return;
+  if(size == 0) return;
   int midPoint = size/2;
-  vector<string> left(wordListVector.begin(), wordListVector.begin() + midPoint);
+  vector<string> left(wordListVector.begin(), wordListVector.begin() + midPoint + 1);
   vector<string> right(wordListVector.begin() + midPoint + 1, wordListVector.end());
   mergeSortHelper(&left);
   mergeSortHelper(&right);
@@ -555,6 +606,7 @@ int main()
 
     Grid newGrid;
     WordList newWords;
+
     newWords.loadWordList("wordlist.txt");
     newWords.quickSort();
 

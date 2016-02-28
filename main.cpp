@@ -24,8 +24,8 @@ Grid::Grid()
     char character = ' ';
 
     //Change these two lines to change the grid size
-    gridFile.open("input15");
-    gridSize = 15;
+    gridFile.open("input250");
+    gridSize = 250;
 
     gridMatrix = new char*[gridSize];
     for (int k = 0; k < gridSize; k++){
@@ -157,10 +157,8 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
                 if ((column-i) < 0){
                         i = 0;
                         column = gridSize-1;
-                        cout << "\ngridSize" << gridSize;
                 }
                 gridString += gridMatrix[(row)][(column-i)];
-                cout << "\nGridString: " << gridString << "\ngridString.size() = " << gridString.size();
                 i++;
             }
             break;
@@ -223,7 +221,6 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
             break;
         }
     }
-    cout << "\n";
     return gridString;
 }
 //------------------WordList Functions----------------------
@@ -294,36 +291,33 @@ int WordList::lookUp(std::string &keyWord, int upperBound, int lowerBound)
     std::string currentField = wordListVector[mid];
     if (currentField == keyWord)
     {
-        cout << "The Word was found!";
         return mid;
     }
     else
     {
-        cout << "\nUpper Bound:" << upperBound;
-        if (upperBound <= lowerBound || upperBound-1 == lowerBound ){
-
-            if (upperBound-1 == lowerBound)
-            //if the bounds have crossed, then the function did not find the keyWord
+        if (upperBound <= lowerBound){
+            //iterate through the string and check for a partial match
+            //this will help the FindMatches function with backtracking
+            int i = 0;
+            int edgeCaseAdjustment = -1;
+            if (lowerBound == 0){
+                edgeCaseAdjustment = 1;
+            } else if (lowerBound == getWordListVectorSize()-1)
             {
-                std::string currentField = wordListVector[upperBound];
-                int i = 0;
-                cout << currentField << "\n";
-                //iterate through the string and check for a partial match
-                //this will help the FindMatches function with backtracking
-
+                edgeCaseAdjustment = -2;
+            }
+            for (int j = edgeCaseAdjustment; j < edgeCaseAdjustment+3; j++){
+                currentField = wordListVector[(j+lowerBound)];
+                i = 0;
                 while (keyWord[i] == currentField[i]){
-                    cout << "\nThis is equal:" << keyWord[i] << " == " << currentField[i];
                     if (i == keyWord.size()-1)
                     {
-                        cout << "\nThere was a partial match, continuing search";
                         return -2;
                     }
                     i++;
                 }
-            } else {
-                cout << "couldn't find your word";
-                return -1;
             }
+            return -1;
         }
         if (currentField > keyWord){
             return lookUp(keyWord, mid-1, lowerBound);
@@ -532,41 +526,61 @@ void FindMatches(WordList &wordListObj, Grid &gridObj)
 //prints out the word that can be found
 {
     std::vector< std::string > wordsFoundList;
-
-    gridObj.printGrid();
-    wordListObj.insertionSort();
-    wordListObj.printWordList();
+    std::string first = "";
+    wordsFoundList.push_back(first);
 
     int location = -1;
-    int stringLength = 1;
-
+    int stringLength = 0;
+    int loopCounter = 0;
     for (int i = 0; i < gridObj.getGridSize(); i++){
         for (int j =0; j < gridObj.getGridSize(); j++){
 
             std::string theKey(1,gridObj.getGridCharacterAt(i,j));
 
             location = wordListObj.lookUp(theKey, wordListObj.getWordListVectorSize()-1, 0);
-
             if (location >= 0){
-                cout << wordListObj.getWord(location) << "\n";
-            } else if(location == -2){
-                while (location == -2){
-                    stringLength += 1;
-                    for (int k = 0; k < 8; k++){
+                //cout << wordListObj.getWord(location) << "\n";
+            } else if(location == -2)
+            {
+                for (int k = 0; k < 8; k++)
+                {
+                    while (location == -2)
+                    {
+                        stringLength += 1;
                         theKey = gridObj.getStringFromGrid(i, j, k, stringLength);
+                        loopCounter++;
                         location = wordListObj.lookUp(theKey, wordListObj.getWordListVectorSize()-1, 0);
+                        if (stringLength > 1){
+                            //cout << theKey << "\n";
+                            //cout << location << "\n";
+                        }
+
+                        if (location >= 0)
+                        {
+                            //cout << "hello";
+
+                            for  (int z = 0; z < wordsFoundList.size(); z++ ){
+                                if ((wordListObj.getWord(location) == wordsFoundList[z])){
+                                    z = wordsFoundList.size();
+                                } else if (z == wordsFoundList.size()-1){
+                                    wordsFoundList.push_back(wordListObj.getWord(location));
+                                    cout << "\nFound a new word " << wordListObj.getWord(location) << " Hooray!";
+                                }
+                            }
+                        }
                         //Last thought before quitting for the night
                         //I need to make a vector that stores all the directions that I
                         //no longer need to check, thus saving a binary search. Use the
                         //index of the vector for each direction. will make sense tomorrow!
                     }
-
-
+                    stringLength = 0;
                 }
 
             }
         }
     }
+    cout << "\nThe loop ran " << loopCounter << " times!";
+
         //cout << wordListObj.lookUp(theKey, newWords.getWordListVectorSize()-1, 0);
 }
 //------------------Main Function--------------------------
@@ -584,27 +598,21 @@ int main()
     t1=clock();
 
     Grid newGrid;
-    newGrid.printGrid();
     WordList newWords;
-    newWords.loadWordList("wordlistPrac.txt");
-    //newWords.insertionSort();
-    newWords.mergeSort();
-    //newWords.quickSort();
-    newWords.printWordList();
-    std::string theKey = "ab";
-    cout << newWords.lookUp(theKey, newWords.getWordListVectorSize()-1, 0);
+
+    newWords.loadWordList("wordlist.txt");
+    newWords.quickSort();
 
     cout << "\n--- Find Matches Test ---\n";
-    //FindMatches(newWords, newGrid);
+    FindMatches(newWords, newGrid);
+    std::string keyWord = "hebetate";
 
-    //test get string from grid funciton
-    int newRow = 0;
-    int newCol = 13;
-    int dir = 7;
-    int length = 20;
-    cout << "code got here";
-    cout << "\nThe grid contains: " << newGrid.getStringFromGrid(newRow, newCol, dir, length);
-
+/*Test for lookUP
+    int upperBound = 1000;
+    int lowerBound = 0;
+    cout << newWords.lookUp(keyWord, upperBound, lowerBound);
+*/
+    cout << "\n--- Find Matches Test Complete---\n";
     t2=clock();
     float diff = ((float)t2-(float)t1);
 

@@ -574,16 +574,22 @@ void FindMatches(WordList &wordListObj, Grid &gridObj)
     int location = -1;
     int stringLength = 0;
     int loopCounter = 0;
+    int loopCounter1 = 0;
     for (int i = 0; i < gridObj.getGridSize(); i++)
     //for the number of rows
     {
         for (int j =0; j < gridObj.getGridSize(); j++)
-        
+
         {
+            loopCounter1++;
+            location = -1;
 
             std::string theKey(1,gridObj.getGridCharacterAt(i,j));
 
             location = wordListObj.lookUp(theKey, wordListObj.getWordListVectorSize()-1, 0);
+            if (location == -1){
+                cout << "\nthe key that doesn't have any letters: " << theKey;
+            }
             if (location >= 0){
                 for  (int z = 0; z < wordsFoundList.size(); z++ ){
                     if ((wordListObj.getWord(location) == wordsFoundList[z])){
@@ -593,46 +599,43 @@ void FindMatches(WordList &wordListObj, Grid &gridObj)
                         cout << "\nFound a new word " << wordListObj.getWord(location) << " Hooray!";
                     }
                 }
-            } else if(location == -2)
+            }
+            location = -2;
+            for (int k = 0; k < 8; k++)
             {
-                for (int k = 0; k < 8; k++)
+                loopCounter++;
+                while (location == -2)
                 {
-                    while (location == -2)
+                    stringLength += 1;
+                    theKey = gridObj.getStringFromGrid(i, j, k, stringLength);
+                    location = wordListObj.lookUp(theKey, wordListObj.getWordListVectorSize()-1, 0);
+
+                    if (location >= 0)
                     {
-                        stringLength += 1;
-                        theKey = gridObj.getStringFromGrid(i, j, k, stringLength);
-                        loopCounter++;
-                        location = wordListObj.lookUp(theKey, wordListObj.getWordListVectorSize()-1, 0);
-                        if (stringLength > 1){
-                            //cout << theKey << "\n";
-                            //cout << location << "\n";
-                        }
-
-                        if (location >= 0)
-                        {
-                            //cout << "hello";
-
-                            for  (int z = 0; z < wordsFoundList.size(); z++ ){
-                                if ((wordListObj.getWord(location) == wordsFoundList[z])){
-                                    z = wordsFoundList.size();
-                                } else if (z == wordsFoundList.size()-1){
-                                    wordsFoundList.push_back(wordListObj.getWord(location));
-                                    cout << "\nFound a new word " << wordListObj.getWord(location) << " Hooray!";
-                                }
+                        for  (int z = 0; z < wordsFoundList.size(); z++ ){
+                            if ((wordListObj.getWord(location) == wordsFoundList[z])){
+                                z = wordsFoundList.size();
+                            } else if (z == wordsFoundList.size()-1){
+                                wordsFoundList.push_back(wordListObj.getWord(location));
+                                cout << "\nFound a new word " << wordListObj.getWord(location) << " Hooray!";
                             }
                         }
-                        //Last thought before quitting for the night
-                        //I need to make a vector that stores all the directions that I
-                        //no longer need to check, thus saving a binary search. Use the
-                        //index of the vector for each direction. will make sense tomorrow!
+                        location = -2;
                     }
-                    stringLength = 0;
+                    //Last thought before quitting for the night
+                    //I need to make a vector that stores all the directions that I
+                    //no longer need to check, thus saving a binary search. Use the
+                    //index of the vector for each direction. will make sense tomorrow!
                 }
-
+                stringLength = 0;
             }
+
+
         }
     }
-    cout << "\nThe loop ran " << loopCounter << " times!";
+    cout << "\nThe loop ran " << loopCounter1 << " times!";
+    cout << "\nThe inner loop ran " << loopCounter << " times!";
+    cout << "\nWe found " << wordsFoundList.size() << " words!";
 
         //cout << wordListObj.lookUp(theKey, newWords.getWordListVectorSize()-1, 0);
 }
@@ -654,7 +657,7 @@ int main()
     WordList newWords;
 
     newWords.loadWordList("wordlist.txt");
-    newWords.insertionSort();
+    newWords.quickSort();
 
     cout << "\n--- Find Matches Test ---\n";
     FindMatches(newWords, newGrid);

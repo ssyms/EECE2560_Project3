@@ -488,7 +488,14 @@ void FindMatches(WordList &wordListObj, Grid &gridObj)
 
             location = wordListObj.lookUp(theKey, wordListObj.getWordListVectorSize()-1, 0);
             if (location >= 0){
-                //cout << wordListObj.getWord(location) << "\n";
+                for  (int z = 0; z < wordsFoundList.size(); z++ ){
+                    if ((wordListObj.getWord(location) == wordsFoundList[z])){
+                        z = wordsFoundList.size();
+                    } else if (z == wordsFoundList.size()-1){
+                        wordsFoundList.push_back(wordListObj.getWord(location));
+                        cout << "\nFound a new word " << wordListObj.getWord(location) << " Hooray!";
+                    }
+                }
             } else if(location == -2)
             {
                 for (int k = 0; k < 8; k++)

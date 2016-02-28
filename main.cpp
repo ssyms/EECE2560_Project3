@@ -28,46 +28,70 @@ Grid::Grid()
     gridSize = 250;
 
     gridMatrix = new char*[gridSize];
-    for (int k = 0; k < gridSize; k++){
+    for (int k = 0; k < gridSize; k++)
+    //creates a pointer array inside each element of the first pointer array
+    {
         gridMatrix[k] = new char[gridSize];
     }
+
     if (gridFile.is_open())
+    //open the file
     {
-        while (int(character) != 10){
+
+        while (int(character) != 10)
+        //gets character until new line
+        {
             gridFile.get(character);
         }
+
         for (int i = 0; i < gridSize; i++ )
+        //goes through each row
         {
+
             for (int j = 0; j < gridSize; j++)
+            //goes through each column
             {
                 character = ' ';
-                while (int(character) == int(' ') || int(character) == 10){
+
+                while (int(character) == int(' ') || int(character) == 10)
+                //when the character equals space or new line, grabs new char
+                {
                     gridFile.get(character);
                 }
+
                 gridMatrix[i][j] = character;
-            }
-        }
+            } //end of going through column
+        } //end of going through rows
+
         gridFile.close();
-    }
-}
+    } //end of if file is open
+
+} //end of grid constructor
 
 void Grid::printGrid()
 //prints out the grid
 {
     cout << "\n";
-    for (int i = 0; i < gridSize; i++){
-        for (int j = 0; j < gridSize; j++){
+    for (int i = 0; i < gridSize; i++)
+    //prints out each row
+    {
+        for (int j = 0; j < gridSize; j++)
+        //prints out each column
+        {
             cout << gridMatrix[i][j] << " ";
         }
         cout << "\n";
     }
-}
+} //end of print grid
 
-int Grid::getGridSize(){
+int Grid::getGridSize()
+//returns grid size
+{
     return gridSize;
 }
 
 char Grid::getGridCharacterAt(int &row, int &column) const
+//returns character in grid
 {
     return gridMatrix[row][column];
 }
@@ -142,10 +166,11 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
                         j = 0;
                         row = 0;
                 }
-                gridString += gridMatrix[(row+j)][(column-i)];
+                gridString += gridMatrix[(row + j)][(column - i)];
                 i++;
                 j++;
             }
+
             break;
         }
         case 4:
@@ -156,9 +181,9 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
             {
                 if ((column-i) < 0){
                         i = 0;
-                        column = gridSize-1;
+                        column = gridSize - 1;
                 }
-                gridString += gridMatrix[(row)][(column-i)];
+                gridString += gridMatrix[(row)][(column - i)];
                 i++;
             }
             break;
@@ -225,7 +250,9 @@ std::string Grid::getStringFromGrid(int row, int column, int direction, int leng
 }
 //------------------WordList Functions----------------------
 
-WordList::WordList(){
+WordList::WordList()
+//default constructor
+{
 
 }
 
@@ -245,10 +272,15 @@ void WordList::loadWordList(std::string fileName)
     }
 }
 
-void WordList::printWordList(){
-    for (int i = 0; i < wordListVector.size(); i++){
+void WordList::printWordList()
+//prints word list
+{
+    for (int i = 0; i < wordListVector.size(); i++)
+    //prints each word in list
+    {
         cout << i << ") " << wordListVector.at(i) << "\n";
     }
+
 }
 
 std::string WordList::getWord(int i)
@@ -262,28 +294,35 @@ void WordList::insertionSort()
 {
     std::string key = wordListVector.at(0);
     cout << "This is the size\n" << wordListVector.size() << endl;
+
     for(int i = 1; i < wordListVector.size(); i++)
     //outer loop to go through each word
     {
         key = wordListVector.at(i);
         int j = i - 1;
-        //cout << i << "\n";
+
         while (j >= 0)
         //while word is greater than the key
         {
             if (wordListVector.at(j) > key)
+            //if word is greater than key
             {
                 wordListVector[(j + 1)] = wordListVector.at(j);
                 wordListVector[j] = key;
                 j = j - 1;
-            } else {
+            }
+            else
+            //if word is ont greater than key
+            {
                 j = -1;
             }
-        }
+            cout << "\n" << i;
+
+        } //end of while loop for greater than
 
     } //end of for loop for insertion sort
 
-}
+} //end of intertion sort
 
 int WordList::lookUp(std::string &keyWord, int upperBound, int lowerBound)
 {
@@ -295,7 +334,9 @@ int WordList::lookUp(std::string &keyWord, int upperBound, int lowerBound)
     }
     else
     {
-        if (upperBound <= lowerBound){
+        if (upperBound <= lowerBound)
+
+        {
             //iterate through the string and check for a partial match
             //this will help the FindMatches function with backtracking
             int i = 0;
@@ -356,7 +397,8 @@ void merge(vector<string>* a, vector<string> left, vector<string> right)
             int right_end = right.size();
             while(leftPlace != left_end)
             {
-              if(left.at(leftPlace) < right.at(rightPlace) && (rightPlace == right_end)) {
+              if(left.at(leftPlace) < right.at(rightPlace) &&
+                (rightPlace == right_end)) {
                   a->at(place) = left.at(leftPlace);
                   leftPlace++;
               }
@@ -532,8 +574,12 @@ void FindMatches(WordList &wordListObj, Grid &gridObj)
     int location = -1;
     int stringLength = 0;
     int loopCounter = 0;
-    for (int i = 0; i < gridObj.getGridSize(); i++){
-        for (int j =0; j < gridObj.getGridSize(); j++){
+    for (int i = 0; i < gridObj.getGridSize(); i++)
+    //for the number of rows
+    {
+        for (int j =0; j < gridObj.getGridSize(); j++)
+        
+        {
 
             std::string theKey(1,gridObj.getGridCharacterAt(i,j));
 
@@ -601,7 +647,7 @@ int main()
     WordList newWords;
 
     newWords.loadWordList("wordlist.txt");
-    newWords.quickSort();
+    newWords.insertionSort();
 
     cout << "\n--- Find Matches Test ---\n";
     FindMatches(newWords, newGrid);

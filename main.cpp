@@ -439,15 +439,12 @@ void WordList::insertionSort()
                 j = j - 1;
             }
             else
-            //if word is ont greater than key
+            //if word is not greater than key
             {
                 j = -1;
             }
-
-            cout << "\n" << i;
-
         } //end of while loop for greater than
-
+        cout << "\n" << i;
     } //end of for loop for insertion sort
 
 } //end of intertion sort
@@ -732,7 +729,7 @@ void Search(int searchChoice)
         }
 
     } //end of switch statement based on sorting algorithm
-
+    newWords.printWordList();
     t5 = clock();
     FindMatches(newWords, newGrid);
     t6 = clock();
@@ -749,143 +746,11 @@ void Search(int searchChoice)
 
 } //end of search function
 
-//------------------Test Functions--------------------------
-void testGridLoadedCorrectly(Grid testGrid)
-//prints grid, check to see if it looks right
-{
-    testGrid.printGrid();
-}
-
-void testWordListLoadedCorrectly(WordList testWordList)
-//prints WordList, check to see if it looks right
-{
-    testWordList.printWordList();
-}
-
-void testWordsSorted(WordList testWordList)
-//checks to make sure every word is greater than its predecesor
-{
-    bool pass = true;
-    for (int i = 0; i < testWordList.getListSize()-1; i++){
-        if (testWordList.getWord(i) > testWordList.getWord(i+1)){
-            cout << "\nSort Algorithm Failed";
-            pass = false;
-        }
-    }
-    if (pass == true)
-    {
-        cout << "\nThe sorting algorithm worked correctly";
-    }
-}
-
-void testLookUp(WordList testWordList)
-//test the three casses for the lookUp Function
-//1) returns -1 when no word found
-//2) returns -2 when a partial match exists
-//3) returns value greater than zero when match is found
-{
-    std::string testKey1 = "nothere";
-    std::string testKey2 = "amazo";
-    std::string testKey3 = "disestablishment";
-
-    if (testWordList.lookUp(testKey1, testWordList.getListSize(), 0) == -1)
-    //test for proper response to nonexistent word
-    {
-        cout << "\nlookUp function passed test 1";
-    } else {
-        cout << "\nlookUp function FAILED test 1";
-    }
-
-    if (testWordList.lookUp(testKey2, testWordList.getListSize(), 0) == -2)
-    //test for proper response to partially found word
-    {
-        cout << "\nlookUp function passed test 2";
-    } else {
-        cout << "\nlookUp function FAILED test 2";
-    }
-
-    if (testWordList.lookUp(testKey3, testWordList.getListSize(), 0) >= 0)
-    //test for proper response found word
-    {
-        cout << "\nlookUp function passed test 3";
-    } else {
-        cout << "\nlookUp function FAILED test 3";
-    }
-
-}
-
-void testGetGridStrings(Grid testGrid)
-//Test all 8 directions to make sure that the
-//funciton gets the correct strings
-{
-    int length = 8;
-    int row = 0;
-    int col = 0;
-    for (int i = 0; i < 8; i++)
-    {
-        cout << "\nThis is the [0][0]";
-        cout << "\nDirection "<< i << " is equal to '";
-        cout << testGrid.getStringFromGrid(row,col,i,length);
-        cout << "'";
-    }
-    row = 0;
-    col = 14;
-    for (int i = 0; i < 8; i++)
-    {
-        cout << "\nThis is the [0][14]";
-        cout << "\nDirection "<< i << " is equal to '";
-        cout << testGrid.getStringFromGrid(row,col,i,length);
-        cout << "'";
-    }
-    row = 14;
-    col = 0;
-    for (int i = 0; i < 8; i++)
-    {
-        cout << "\nThis is the [14][0]";
-        cout << "\nDirection "<< i << " is equal to '";
-        cout << testGrid.getStringFromGrid(row,col,i,length);
-        cout << "'";
-    }
-    row = 14;
-    col = 14;
-    for (int i = 0; i < 8; i++)
-    {
-        cout << "\nThis is the [14][14]";
-        cout << "\nDirection "<< i << " is equal to '";
-        cout << testGrid.getStringFromGrid(row,col,i,length);
-        cout << "'";
-    }
-
-}
-
-
 //------------------Main Function--------------------------
 
 int main()
 //main Function
 {
-    //TESTING
-
-    //Test Grid Loaded
-    Grid testGrid(15);
-    testGridLoadedCorrectly(testGrid);
-
-    //Test Words Loaded
-    WordList newWords;
-    newWords.loadWordList("wordlist.txt");
-    testWordListLoadedCorrectly(newWords);
-
-    //Test words sorted
-    newWords.quickSort();
-    testWordsSorted(newWords);
-
-    //Test Look up Function
-    testLookUp(newWords);
-
-    testGetGridStrings(testGrid);
-
-
-
     int sortChoice = 1;
     cout << "\nHi! Which type of sort would you like to implement?\n";
     cout << "Your options are:";
@@ -894,7 +759,4 @@ int main()
     cout << "\nIntegers only please!\n";
     cin >> sortChoice;
     Search(sortChoice);
-
-
-
 } // end of main function

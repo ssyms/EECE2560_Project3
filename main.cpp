@@ -4,9 +4,10 @@
 //                                                Sarada Symonds
 //                                                symonds.s@husky.neu.edu
 //
-// Main program file for homework 3a. 
+// Main program file for homework 3a.
 #include "WordList.h"
 #include "Grid.h"
+#include "HashTable.h"
 #include <iostream>
 #include <cstdlib>
 #include <time.h>
@@ -745,6 +746,44 @@ void Search(int searchChoice)
     cout << "finding time in seconds: " << findTime << endl;
 
 } //end of search function
+
+
+//------------------HashTable Functions--------------------------
+template <typename T>
+HashTable<T>::HashTable()
+{
+
+}
+
+template <typename T>
+HashTable<T>::HashTable(int s)
+{
+
+}
+
+template <typename T>
+void HashTable<T>::AddItem()
+{
+
+}
+
+template <typename T>
+void HashTable<T>::DeleteItem()
+{
+
+}
+
+template <typename T>
+T HashTable<T>::InList()
+{
+
+}
+
+template <typename T>
+int HashTable<T>::Hash()
+{
+    return 1;
+}
 
 //------------------Main Function--------------------------
 

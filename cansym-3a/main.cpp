@@ -7,7 +7,6 @@
 // Main program file for homework 3a.
 #include "WordList.h"
 #include "Grid.h"
-#include "heap.h"
 #include <iostream>
 #include <cstdlib>
 #include <time.h>
@@ -371,92 +370,6 @@ std::string Grid::getStringFromGrid(int row, int col, int dir, int length) const
     return gridString;
 
 } //end of getStringFromGri function
-
-//------------------Heap Functions---------------------------
-template<typename T>
-Heap<T>::Heap()
-//default constructor
-{
-
-}
-
-template<typename T>
-Heap<T>::Heap(std::string fileName)
-//constructor that uploads from file
-{
-  ifstream heapFile;
-  std::string line;
-  heapFile.open(fileName);
-
-  if (heapFile.is_open())
-  //checks that file is open
-  {
-      while (getline(heapFile,line))
-      //while there are new lines in the file
-      {
-          heapVector.push_back(line);
-      }
-
-      heapFile.close();
-  } //end of if for open file
-
-}
-
-//returns the parent of the nth item in heap
-template<typename T>
-std::string Heap<T>::Parent(int n)
-{
-    int k = n / 2;
-
-    return heapVector.at(k);
-}
-
-//returns the left child of the nth item in heap
-template<typename T>
-std::string Heap<T>::Left(int n)
-{
-    int k = 2 * n;
-
-    return heapVector.at(k);
-}
-
-//returns the right child of the nth
-template<typename T>
-std::string Heap<T>::Right(int n)
-{
-  int k = (2 * n) + 1;
-
-  return heapVector.at(k);
-}
-
-//returns the nth item of heap
-template<typename T>
-std::string Heap<T>::GetItem(int n)
-{
-  return heapVector.at(n);
-}
-
-//copies list to vector and calls build max heap
-template<typename T>
-void InitializeMaxHeap()
-{
-
-}
-
-//builds a max heap
-template<typename T>
-void BuildMaxHeap()
-{
-
-}
-
-//max heapifies the heapifies
-template<typename T>
-void MaxHeapify()
-{
-
-}
-
 //------------------WordList Functions----------------------
 
 WordList::WordList()

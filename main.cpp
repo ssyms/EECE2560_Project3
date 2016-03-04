@@ -4,7 +4,7 @@
 //                                                Sarada Symonds
 //                                                symonds.s@husky.neu.edu
 //
-// Main program file for homework 3a.
+// Main program file for homework 3a. 
 #include "WordList.h"
 #include "Grid.h"
 #include "heap.h"

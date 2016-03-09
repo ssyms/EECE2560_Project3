@@ -4,7 +4,7 @@
 //                                                Sarada Symonds
 //                                                symonds.s@husky.neu.edu
 //
-// Main program file for homework 3a. 
+// Main program file for homework 3a.
 #include "WordList.h"
 #include "Grid.h"
 #include "heap.h"
@@ -438,24 +438,54 @@ std::string Heap<T>::GetItem(int n)
 
 //copies list to vector and calls build max heap
 template<typename T>
-void InitializeMaxHeap()
+void Heap<T>::InitializeMaxHeap()
 {
 
 }
 
 //builds a max heap
 template<typename T>
-void BuildMaxHeap()
+void Heap<T>::BuildMaxHeap()
 {
 
 }
 
 //max heapifies the heapifies
 template<typename T>
-void MaxHeapify()
+void Heap<T>::MaxHeapify(int i)
 {
+  int size = heapVector.size();
+  int levels = log(size) / log(2);
 
-}
+  int l = 1, r = 2, i = 0, largestLoc = 0;
+  T left = Left(l);
+  T right = Right(r);
+  T largest = GetItem(i);
+  T item = GetItem(i);
+  if((l < heapVector.size()) && left > largest)
+  //if left is in the heap and greater than current largest
+  {
+    largest = left;
+    largestLoc = l;
+  }
+
+  if((r < heapVector.size()) && right > largest)
+  //if right is largest
+  {
+    largest = right;
+    largestLoc = r;
+  }
+
+  if(largest != item)
+  //if current top of heap is not largest, swap
+  {
+    heapVector.at(i) = largest;
+    MaxHeapify(largestLoc);
+  }
+
+} // end of max heapify function
+
+
 
 //------------------WordList Functions----------------------
 

@@ -387,7 +387,7 @@ Heap<T>::Heap(std::string fileName)
   ifstream heapFile;
   std::string line;
   heapFile.open(fileName);
-
+  heapVector.push_back("");
   if (heapFile.is_open())
   //checks that file is open
   {
@@ -452,9 +452,9 @@ void Heap<T>::BuildMaxHeap()
 
 //max heapifies the heapifies
 template<typename T>
-void Heap<T>::MaxHeapify(int i)
+void Heap<T>::MaxHeapify()
 {
-  int size = heapVector.size();
+  /*int size = heapVector.size();
   int levels = log(size) / log(2);
 
   int l = 1, r = 2, i = 0, largestLoc = 0;
@@ -481,7 +481,7 @@ void Heap<T>::MaxHeapify(int i)
   {
     heapVector.at(i) = largest;
     MaxHeapify(largestLoc);
-  }
+  }*/
 
 } // end of max heapify function
 

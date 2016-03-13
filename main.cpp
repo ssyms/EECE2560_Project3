@@ -785,13 +785,44 @@ void HashTable<T>::DeleteItem(T itemThatIsDeadToMe)
 }
 
 template <typename T>
-T HashTable<T>::InList(T lookUpItem)
+int HashTable<T>::InList(T lookUpItem)
 {
-    return lookUpItem;
+    int hashTableLocation = Hash(lookUpItem);
+    int lookUpItemLocation = -1;
+    for (int i = 0 ; i < hashTableTable[hashTableLocation].size() ; i++)
+    {
+        if (hashTableTable[hashTableLocation][i] == lookUpItem)
+        //if you found the word
+        {
+            return i;
+        }
+        else
+        //else keep looking
+        {
+            int j = 0;
+            while (hashTableTable[hashTableLocation][i][j] == lookUpItem[j])
+            //while the word matches partially
+            {
+                if (j == (hashTableTable[hashTableLocation][i].size()-1) || j == (lookUpItem.size()-1))
+                //return int to indicate partial match
+                {
+                    lookUpItemLocation = -2;
+                }
+
+                j++;
+            } //end of while loop
+        }
+    }
+    return lookUpItemLocation;
 }
 
 template <typename T>
 int HashTable<T>::Hash(T newItem)
+//Simple hash function, uses the ascii number of the
+//character to make the a number. Must subtract 96
+//so that 'a' = 1 ... then we use each character to
+//make a number the is base 26 where the first characters
+//is the least significant bit.
 {
     if (newItem.size() <= 1)
     //The word being hashed is one character long
@@ -820,10 +851,11 @@ int main()
 //NEW CODE
     HashTable<std::string> newHashTable;
     std::string testString = "zzzztesty Culls";
+    std::string testString2 = "zzzzte";
     newHashTable.AddItem(testString, 10);
     int location = newHashTable.Hash(testString);
     newHashTable.AddItem(testString, location);
-    std::cout << "\nlocation:" << location;
+    std::cout << "\nlocation:" << newHashTable.InList(testString2);
 
 //OLD CODE
 

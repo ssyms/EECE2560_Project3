@@ -31,7 +31,7 @@ class HashTable
 
     void DeleteItem(T itemThatIsDeadToMe);
 
-    T InList(T lookUpItem);
+    int InList(T lookUpItem);
 
     int Hash(T newItem);
 

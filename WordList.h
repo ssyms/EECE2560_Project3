@@ -31,7 +31,7 @@ class WordList
     void loadWordList(std::string fileName);
 
     //returns the word in the list based on given int i
-    std::string getWord(int i);
+    std::string getWord(int i, std::string newWord);
 
     //overload operator to print out wordlist
     friend std::ostream& operator << (std::ostream & ostr, WordList wordObj);

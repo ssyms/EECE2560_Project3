@@ -411,7 +411,7 @@ void WordList::printWordList()
 
 }
 
-std::string WordList::getWord(int i)
+std::string WordList::getWord(int i, std::string newWord)
 //returns a word in the array at the given location
 {
   return wordListVector.at(i);
@@ -609,7 +609,7 @@ std::ostream& operator << (std::ostream & ostr, WordList wordObj)
   for(int i = 0; i < wordObj.wordListVector.size(); i++)
   //prints out each word in list
   {
-    ostr << wordObj.getWord(i) << std::endl;
+    ostr << wordObj.getWord(i, "Null") << std::endl;
   }
 
   return ostr;
@@ -634,7 +634,8 @@ bool isOnList(string s, vector<string> foundWords)
       return false;
 }
 
-void FindMatches(WordList &listObj, Grid &gridObj)
+template <typename T>
+void FindMatches(T &listObj, Grid &gridObj)
 //prints out the word that can be found
 {
     std::vector< std::string > wordsFoundList;
@@ -673,12 +674,12 @@ void FindMatches(WordList &listObj, Grid &gridObj)
                     if (loc >= 0)
                     //if you found a word
                     {
-                        if(!isOnList(listObj.getWord(loc), wordsFoundList))
+                        if(!isOnList(listObj.getWord(loc, theKey), wordsFoundList))
                         //if word is not on the list of already found words
                         {
-                          wordsFoundList.push_back(listObj.getWord(loc));
+                          wordsFoundList.push_back(listObj.getWord(loc, theKey));
                           cout << "\nFound a new word ";
-                          cout << listObj.getWord(loc);
+                          cout << listObj.getWord(loc, theKey);
                         }
 
                         loc = -2;
@@ -707,9 +708,12 @@ void Search(int searchChoice)
 
     std::cout << "Clock time: " << clock() << std::endl;
     clock_t t1,t2, t3, t4, t5, t6;
-    t1 = clock();
+
+    HashTable<std::string> newHashTable;
     Grid newGrid(fileNumber);
     WordList newWords;
+    t1 = clock();
+
     newWords.loadWordList("wordlist.txt");
     switch (searchChoice)
     //Use user input to choose search
@@ -728,11 +732,23 @@ void Search(int searchChoice)
             newWords.quickSort();
             t4 = clock();
         }
+        case 3:
+        //HashTable
+        {
+            t3 = clock();
+            newHashTable.LoadWords("wordlist.txt");
+            t4 = clock();
+        }
 
     } //end of switch statement based on sorting algorithm
-    newWords.printWordList();
     t5 = clock();
-    FindMatches(newWords, newGrid);
+    if (searchChoice > 2)
+    {
+        FindMatches(newHashTable, newGrid);
+    } else {
+        FindMatches(newWords, newGrid);
+    }
+
     t6 = clock();
 
     t2 = clock();
@@ -756,16 +772,32 @@ HashTable<T>::HashTable()
 }
 
 template <typename T>
-HashTable<T>::HashTable(int s)
+HashTable<T>::HashTable(std::string fileName)
 {
-    hashTableTable.resize(s);
-}
+    hashTableTable.resize(475254);
+
+    ifstream wordListFile;
+    std::string line;
+    wordListFile.open(fileName);
+
+    if (wordListFile.is_open())
+    //checks that file is open
+    {
+        while (getline(wordListFile,line))
+        //while there are new lines in the file
+        {
+            AddItem(line, Hash(line));
+        }
+
+        wordListFile.close();
+    } //end of if for open file
+
+} //end of load word list function
 
 template <typename T>
 void HashTable<T>::AddItem(T newItem, int location)
 {
     hashTableTable[location].push_back(newItem);
-    std::cout << "\n" << hashTableTable[location][0];
 }
 
 template <typename T>
@@ -785,7 +817,39 @@ void HashTable<T>::DeleteItem(T itemThatIsDeadToMe)
 }
 
 template <typename T>
-int HashTable<T>::InList(T lookUpItem)
+int HashTable<T>::lookUp(T lookUpItem, int unused, int unused2)
+{
+    int hashTableLocation = Hash(lookUpItem);
+    int lookUpItemLocation = -1;
+    for (int i = 0 ; i < hashTableTable[hashTableLocation].size() ; i++)
+    {
+        if (hashTableTable[hashTableLocation][i] == lookUpItem)
+        //if you found the word
+        {
+            return i;
+        }
+        else
+        //else keep looking
+        {
+            int j = 0;
+            while (hashTableTable[hashTableLocation][i][j] == lookUpItem[j])
+            //while the word matches partially
+            {
+                if (j == (hashTableTable[hashTableLocation][i].size()-1) || j == (lookUpItem.size()-1))
+                //return int to indicate partial match
+                {
+                    lookUpItemLocation = -2;
+                }
+
+                j++;
+            } //end of while loop
+        }
+    }
+    return lookUpItemLocation;
+}
+
+template <typename T>
+int HashTable<T>::InList(T lookUpItem, int unused, int unused2)
 {
     int hashTableLocation = Hash(lookUpItem);
     int lookUpItemLocation = -1;
@@ -824,6 +888,10 @@ int HashTable<T>::Hash(T newItem)
 //make a number the is base 26 where the first characters
 //is the least significant bit.
 {
+    if(strchr(newItem.c_str(), char(39)))
+    {
+        return 0;
+    }
     if (newItem.size() <= 1)
     //The word being hashed is one character long
     {
@@ -843,12 +911,46 @@ int HashTable<T>::Hash(T newItem)
     }
 }
 
+template <typename T>
+void HashTable<T>::LoadWords(std::string fileName)
+{
+    ifstream wordListFile;
+    std::string line;
+    wordListFile.open(fileName);
+
+    if (wordListFile.is_open())
+    //checks that file is open
+    {
+        while (getline(wordListFile,line))
+        //while there are new lines in the file
+        {
+            AddItem(line, Hash(line));
+        }
+
+        wordListFile.close();
+    } //end of if for open file
+
+} //end of load word list function
+
+template <typename T>
+int HashTable<T>::getListSize(){
+    return 1;
+}
+
+template <typename T>
+std::string HashTable<T>::getWord(int i, std::string newWord)
+//returns a word in the array at the given location
+{
+  return hashTableTable[Hash(newWord)][i];
+}
+
 //------------------Main Function--------------------------
 
 int main()
 //main Function
 {
 //NEW CODE
+/*
     HashTable<std::string> newHashTable;
     std::string testString = "zzzztesty Culls";
     std::string testString2 = "zzzzte";
@@ -856,6 +958,7 @@ int main()
     int location = newHashTable.Hash(testString);
     newHashTable.AddItem(testString, location);
     std::cout << "\nlocation:" << newHashTable.InList(testString2);
+    */
 
 //OLD CODE
 
@@ -864,6 +967,7 @@ int main()
     cout << "Your options are:";
     cout << "\n1) Insertion Sort";
     cout << "\n2) Quick Sort";
+    cout << "\n3) Hash Table";
     cout << "\nIntegers only please!\n";
     cin >> sortChoice;
     Search(sortChoice);

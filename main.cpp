@@ -752,7 +752,7 @@ void Search(int searchChoice)
 template <typename T>
 HashTable<T>::HashTable()
 {
-    hashTableTable.resize(531441);
+    hashTableTable.resize(475254);
 }
 
 template <typename T>
@@ -765,6 +765,7 @@ template <typename T>
 void HashTable<T>::AddItem(T newItem, int location)
 {
     hashTableTable[location].push_back(newItem);
+    std::cout << "\n" << hashTableTable[location][0];
 }
 
 template <typename T>
@@ -792,12 +793,23 @@ T HashTable<T>::InList(T lookUpItem)
 template <typename T>
 int HashTable<T>::Hash(T newItem)
 {
-    char firstChar = ' ';
-    char secondChar = ' ';
-    char thirdChar = ' ';
-    char fourthChar = ' ';
-    return 1;
-
+    if (newItem.size() <= 1)
+    //The word being hashed is one character long
+    {
+        return int(newItem[0])-96;
+    } else if (newItem.size() == 2)
+    //The word being hashed is two characters long
+    {
+        return (int(newItem[0])-96)+((int(newItem[1])-96)*26);
+    } else if (newItem.size() == 3)
+    //The word being hashed is three characters long
+    {
+        return (int(newItem[0])-96)+((int(newItem[1])-96)*26)+((int(newItem[2])-96)*676);
+    } else
+    //The word being hashed is longer than 3 characters
+    {
+        return (int(newItem[0])-96)+((int(newItem[1])-96)*26)+((int(newItem[2])-96)*676)+((int(newItem[3])-96)*17576);
+    }
 }
 
 //------------------Main Function--------------------------
@@ -807,8 +819,11 @@ int main()
 {
 //NEW CODE
     HashTable<std::string> newHashTable;
-    std::string testString = "Testy Culls";
+    std::string testString = "zzzztesty Culls";
     newHashTable.AddItem(testString, 10);
+    int location = newHashTable.Hash(testString);
+    newHashTable.AddItem(testString, location);
+    std::cout << "\nlocation:" << location;
 
 //OLD CODE
 

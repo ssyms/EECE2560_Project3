@@ -387,7 +387,6 @@ Heap<T>::Heap(std::string fileName)
   ifstream heapFile;
   std::string line;
   heapFile.open(fileName);
-  heapVector.push_back("");
   if (heapFile.is_open())
   //checks that file is open
   {
@@ -440,9 +439,19 @@ std::string Heap<T>::GetItem(int n)
 template<typename T>
 void Heap<T>::InitializeMaxHeap()
 {
-  maxHeap = heapVector;
+
+  maxHeap.push_back("");
+  for(int i = 0; i < heapVector.size(); i++)
+  //adds each item in heapvector to maxheap
+  {
+    maxHeap.at(i + 1) = heapVector.at(i);
+  }
   BuildMaxHeap();
-  heapVector = maxHeap;
+  for(int i = 0; i < heapVector.size(); i++)
+  //adds each item in maxheap to heapvector
+  {
+    heapVector.at(i) = maxHeap.at(i + 1);
+  }
 
 }
 

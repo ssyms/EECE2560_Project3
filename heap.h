@@ -42,6 +42,8 @@ class Heap
       //max heapifies the heapifies
       void MaxHeapify();
 
+      void MaxHeapifyHelper(int i);
+
       //heap sort function
       void HeapSort();
 
@@ -49,5 +51,8 @@ class Heap
 
       //vector that stores the heap
       std::vector<T> heapVector;
+
+      //vector that stores the heap
+      std::vector<T> maxHeap;
 };
 #endif

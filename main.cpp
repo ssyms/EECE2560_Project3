@@ -440,6 +440,9 @@ std::string Heap<T>::GetItem(int n)
 template<typename T>
 void Heap<T>::InitializeMaxHeap()
 {
+  maxHeap = heapVector;
+  BuildMaxHeap();
+  heapVector = maxHeap;
 
 }
 
@@ -447,6 +450,12 @@ void Heap<T>::InitializeMaxHeap()
 template<typename T>
 void Heap<T>::BuildMaxHeap()
 {
+    int i;
+    int n = heapVector.size();
+    for(i = n/2; i >= 1; i--)
+    {
+        MaxHeapifyHelper(i);
+    }
 
 }
 
@@ -454,36 +463,38 @@ void Heap<T>::BuildMaxHeap()
 template<typename T>
 void Heap<T>::MaxHeapify()
 {
-  /*int size = heapVector.size();
-  int levels = log(size) / log(2);
-
-  int l = 1, r = 2, i = 0, largestLoc = 0;
-  T left = Left(l);
-  T right = Right(r);
-  T largest = GetItem(i);
-  T item = GetItem(i);
-  if((l < heapVector.size()) && left > largest)
-  //if left is in the heap and greater than current largest
-  {
-    largest = left;
-    largestLoc = l;
-  }
-
-  if((r < heapVector.size()) && right > largest)
-  //if right is largest
-  {
-    largest = right;
-    largestLoc = r;
-  }
-
-  if(largest != item)
-  //if current top of heap is not largest, swap
-  {
-    heapVector.at(i) = largest;
-    MaxHeapify(largestLoc);
-  }*/
+    int i;
+    int n = maxHeap.size();
+    for(i = n/2; i >= 1; i--)
+    {
+        MaxHeapifyHelper(i);
+    }
 
 } // end of max heapify function
+
+template<typename T>
+void Heap<T>::MaxHeapifyHelper(int i)
+//max heapify elper function
+{
+    T j, temp;
+    temp = maxHeap.at(i);
+    j = 2 * i;
+
+    while (j <= maxHeap.size()) //need iterator here
+    {
+        if (j < maxHeap.size() && maxHeap.at(j+1) > maxHeap.at(j))
+        j = j + 1;
+        if (temp > maxHeap.at(j))
+          break;
+        else if (temp <= maxHeap.at(j))
+        {
+          maxHeap.at(j / 2) = maxHeap.at(j);
+          j = 2 * j;
+        }
+    }
+    maxHeap.at(j / 2) = temp;
+}
+
 
 
 

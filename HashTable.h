@@ -27,13 +27,13 @@ class HashTable
 
     HashTable(int s);
 
-    void AddItem();
+    void AddItem(T newItem, int location);
 
-    void DeleteItem();
+    void DeleteItem(T itemThatIsDeadToMe);
 
-    T InList();
+    T InList(T lookUpItem);
 
-    int Hash();
+    int Hash(T newItem);
 
   private:
     //vector to store words in

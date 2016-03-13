@@ -752,37 +752,52 @@ void Search(int searchChoice)
 template <typename T>
 HashTable<T>::HashTable()
 {
-
+    hashTableTable.resize(531441);
 }
 
 template <typename T>
 HashTable<T>::HashTable(int s)
 {
-
+    hashTableTable.resize(s);
 }
 
 template <typename T>
-void HashTable<T>::AddItem()
+void HashTable<T>::AddItem(T newItem, int location)
 {
-
+    hashTableTable[location].push_back(newItem);
 }
 
 template <typename T>
-void HashTable<T>::DeleteItem()
+void HashTable<T>::DeleteItem(T itemThatIsDeadToMe)
 {
+    int location = Hash(itemThatIsDeadToMe);
+    for (int i = 0 ; i < hashTableTable[location].size() ; i++){
+        if (hashTableTable[location][i] == itemThatIsDeadToMe){
+            hashTableTable[location].erase(hashTableTable[location].begin()+i);
 
+            //Assumes there is only one copy of each item
+            //Delete the next line if you want to Delete
+            //all copies of an item
+            i = hashTableTable[location].size();
+        }
+    }
 }
 
 template <typename T>
-T HashTable<T>::InList()
+T HashTable<T>::InList(T lookUpItem)
 {
-
+    return lookUpItem;
 }
 
 template <typename T>
-int HashTable<T>::Hash()
+int HashTable<T>::Hash(T newItem)
 {
+    char firstChar = ' ';
+    char secondChar = ' ';
+    char thirdChar = ' ';
+    char fourthChar = ' ';
     return 1;
+
 }
 
 //------------------Main Function--------------------------
@@ -790,6 +805,13 @@ int HashTable<T>::Hash()
 int main()
 //main Function
 {
+//NEW CODE
+    HashTable<std::string> newHashTable;
+    std::string testString = "Testy Culls";
+    newHashTable.AddItem(testString, 10);
+
+//OLD CODE
+
     int sortChoice = 1;
     cout << "\nHi! Which type of sort would you like to implement?\n";
     cout << "Your options are:";

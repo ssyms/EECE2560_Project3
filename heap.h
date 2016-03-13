@@ -19,19 +19,19 @@ class Heap
       Heap();
 
       //constructor that uploads from filexx
-      Heap(std::string fileName);
+      void loadHeap(std::string fileName);
 
       //returns the parent of the nth item in heap
-      std::string Parent(int n);
+      int Parent(int n);
 
       //returns the left child of the nth item in heap
-      std::string Left(int n);
+      int Left(int n);
 
       //returns the right child of the nth
-      std::string Right(int n);
+      int Right(int n);
 
       //returns the nth item of heap
-      std::string GetItem(int n);
+      T GetItem(int n);
 
       //copies list to vector and calls build max heap
       void InitializeMaxHeap();
@@ -46,6 +46,9 @@ class Heap
 
       //heap sort function
       void HeapSort();
+
+      //MaxHeapTest
+      void MaxHeapifyTest();
 
     private:
 

@@ -381,7 +381,7 @@ Heap<T>::Heap()
 }
 
 template<typename T>
-Heap<T>::Heap(std::string fileName)
+void Heap<T>::loadHeap(std::string fileName)
 //constructor that uploads from file
 {
   ifstream heapFile;
@@ -403,34 +403,34 @@ Heap<T>::Heap(std::string fileName)
 
 //returns the parent of the nth item in heap
 template<typename T>
-std::string Heap<T>::Parent(int n)
+int Heap<T>::Parent(int n)
 {
     int k = n / 2;
 
-    return heapVector.at(k);
+    return k;
 }
 
 //returns the left child of the nth item in heap
 template<typename T>
-std::string Heap<T>::Left(int n)
+int Heap<T>::Left(int n)
 {
     int k = 2 * n;
 
-    return heapVector.at(k);
+    return k;
 }
 
 //returns the right child of the nth
 template<typename T>
-std::string Heap<T>::Right(int n)
+int Heap<T>::Right(int n)
 {
   int k = (2 * n) + 1;
 
-  return heapVector.at(k);
+  return k;
 }
 
 //returns the nth item of heap
 template<typename T>
-std::string Heap<T>::GetItem(int n)
+T Heap<T>::GetItem(int n)
 {
   return heapVector.at(n);
 }
@@ -441,27 +441,36 @@ void Heap<T>::InitializeMaxHeap()
 {
 
   maxHeap.push_back("");
+  /*for (int i = 0; i < maxHeap.size(); i++)
+  //prints each word in list
+  {
+      cout << i << ") " << maxHeap.at(i) << "\n";
+  }*/
   for(int i = 0; i < heapVector.size(); i++)
   //adds each item in heapvector to maxheap
   {
-    maxHeap.at(i + 1) = heapVector.at(i);
+    maxHeap.push_back(heapVector.at(i));
   }
   BuildMaxHeap();
-  for(int i = 0; i < heapVector.size(); i++)
+  for(int i = 1; i < maxHeap.size(); i++)
   //adds each item in maxheap to heapvector
   {
-    heapVector.at(i) = maxHeap.at(i + 1);
+    heapVector.at(i - 1) = maxHeap.at(i);
   }
-
+  for (int i = 0; i < heapVector.size(); i++)
+  //prints each word in list
+  {
+      cout << i << ") " << heapVector.at(i) << "\n";
+  }
+  MaxHeapifyTest();
 }
 
 //builds a max heap
 template<typename T>
 void Heap<T>::BuildMaxHeap()
 {
-    int i;
-    int n = heapVector.size();
-    for(i = n/2; i >= 1; i--)
+    int n = maxHeap.size();
+    for(int i = n/2; i >= 1; i--)
     {
         MaxHeapifyHelper(i);
     }
@@ -485,25 +494,48 @@ template<typename T>
 void Heap<T>::MaxHeapifyHelper(int i)
 //max heapify elper function
 {
-    T j, temp;
-    temp = maxHeap.at(i);
-    j = 2 * i;
+  int l, r, largest;
+  T temp;
+  largest = i;
+  l = Left(i);
+  r = Right(i);
+  if((l < maxHeap.size()) && (maxHeap.at(l) > maxHeap.at(largest)))
+  {
+    largest = l;
+  }
 
-    while (j <= maxHeap.size()) //need iterator here
-    {
-        if (j < maxHeap.size() && maxHeap.at(j+1) > maxHeap.at(j))
-        j = j + 1;
-        if (temp > maxHeap.at(j))
-          break;
-        else if (temp <= maxHeap.at(j))
-        {
-          maxHeap.at(j / 2) = maxHeap.at(j);
-          j = 2 * j;
-        }
-    }
-    maxHeap.at(j / 2) = temp;
+  if(r < maxHeap.size() && maxHeap.at(r) > maxHeap.at(largest))
+  {
+    largest = r;
+  }
+
+  if(largest != i)
+  {
+    temp = maxHeap.at(i);
+    maxHeap.at(i) = maxHeap.at(largest);
+    maxHeap.at(largest) = temp;
+    MaxHeapifyHelper(largest);
+  }
+
 }
 
+template<typename T>
+void Heap<T>::MaxHeapifyTest()
+//checks that max heap meets heap conditions
+{
+  int i = 0;
+  while(i < heapVector.size())
+  {
+    if(GetItem(i) >= GetItem(Right(i)) && GetItem(i) >= GetItem(Left(i)))
+    {
+      i++;
+    } else {
+      cout << GetItem(i) << ", Right: " << Right(i) << ", "<< GetItem(Right(i));
+      cout << "; Left: " << Left(i) << ", "<< GetItem(Left(i)) << endl;
+      i++;
+    }
+  }
+}
 
 
 
@@ -891,12 +923,15 @@ void Search(int searchChoice)
 int main()
 //main Function
 {
-    int sortChoice = 1;
+    /*int sortChoice = 1;
     cout << "\nHi! Which type of sort would you like to implement?\n";
     cout << "Your options are:";
     cout << "\n1) Insertion Sort";
     cout << "\n2) Quick Sort";
     cout << "\nIntegers only please!\n";
     cin >> sortChoice;
-    Search(sortChoice);
+    Search(sortChoice);*/
+    Heap<std::string> heapTest;
+    heapTest.loadHeap("wordlist.txt");
+    heapTest.InitializeMaxHeap();
 } // end of main function

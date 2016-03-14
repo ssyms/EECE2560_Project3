@@ -31,7 +31,7 @@ class WordList
     void loadWordList(std::string fileName);
 
     //returns the word in the list based on given int i
-    std::string getWord(int i, std::string newWord);
+    std::string getWord(int i);
 
     //overload operator to print out wordlist
     friend std::ostream& operator << (std::ostream & ostr, WordList wordObj);
@@ -49,9 +49,6 @@ class WordList
 
     //looks up whether a word is on the list and returns the location
     int lookUp(std::string &keyWord, int upperBound, int lowerBound);
-
-    //heap sort
-    void heapsort();
 
   private:
     //vector to store words in

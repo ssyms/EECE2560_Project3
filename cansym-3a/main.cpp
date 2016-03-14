@@ -7,8 +7,6 @@
 // Main program file for homework 3a.
 #include "WordList.h"
 #include "Grid.h"
-#include "HashTable.h"
-#include "heap.h"
 #include <iostream>
 #include <cstdlib>
 #include <time.h>
@@ -372,225 +370,6 @@ std::string Grid::getStringFromGrid(int row, int col, int dir, int length) const
     return gridString;
 
 } //end of getStringFromGri function
-
-//------------------Heap Functions---------------------------
-template<typename T>
-Heap<T>::Heap()
-//default constructor
-{
-
-}
-
-template<typename T>
-void Heap<T>::loadHeap(std::string fileName)
-//constructor that uploads from file
-{
-  ifstream heapFile;
-  std::string line;
-  heapFile.open(fileName);
-  if (heapFile.is_open())
-  //checks that file is open
-  {
-      while (getline(heapFile,line))
-      //while there are new lines in the file
-      {
-          heapVector.push_back(line);
-      }
-
-      heapFile.close();
-  } //end of if for open file
-
-}
-
-//returns the parent of the nth item in heap
-template<typename T>
-int Heap<T>::Parent(int n)
-{
-    int k = n / 2;
-
-    return k;
-}
-
-//returns the left child of the nth item in heap
-template<typename T>
-int Heap<T>::Left(int n)
-{
-    int k = 2 * n;
-
-    return k;
-}
-
-//returns the right child of the nth
-template<typename T>
-int Heap<T>::Right(int n)
-{
-  int k = (2 * n) + 1;
-
-  return k;
-}
-
-//returns the nth item of heap
-template<typename T>
-T Heap<T>::GetItem(int n)
-{
-  return heapVector.at(n);
-}
-
-
-template<typename T>
-void Heap<T>::InitializeMaxHeap()
-//copies list to vector and calls build max heap
-{
-
-  maxHeap.push_back("");
-
-  for(int i = 0; i < heapVector.size(); i++)
-  //adds each item in heapvector to maxheap
-  {
-    maxHeap.push_back(heapVector.at(i));
-  }
-
-  BuildMaxHeap();
-
-  for(int i = 1; i < maxHeap.size(); i++)
-  //adds each item in maxheap to heapvector
-  {
-    heapVector.at(i - 1) = maxHeap.at(i);
-  }
-
-  for (int i = 0; i < heapVector.size(); i++)
-  //prints each word in list
-  {
-    cout << i << ") " << heapVector.at(i) << "\n";
-  }
-
-} //end of initialize max heap
-
-template<typename T>
-void Heap<T>::BuildMaxHeap()
-//builds max heap
-{
-    int n = maxHeap.size();
-
-    for(int i = n; i >= 1; i--)
-    //iterates over max heapify
-    {
-        MaxHeapify(i);
-    }
-
-} //end of build max heap
-
-template<typename T>
-void Heap<T>::MaxHeapify(int i)
-//max heapify elper function
-{
-  int l, r, largest;
-  T temp;
-  largest = i;
-  l = Left(i);
-  r = Right(i);
-
-  if((l < maxHeap.size()) && (maxHeap.at(l) > maxHeap.at(largest)))
-  //if left is larger than parent
-  {
-    largest = l;
-  }
-
-  if(r < maxHeap.size() && maxHeap.at(r) > maxHeap.at(largest))
-  //if right larger than current largest
-  {
-    largest = r;
-  }
-
-  if(largest != i)
-  //does the swap, floats down
-  {
-    temp = maxHeap.at(i);
-    maxHeap.at(i) = maxHeap.at(largest);
-    maxHeap.at(largest) = temp;
-    MaxHeapify(largest);
-  }
-
-} //end max heapify
-
-template<typename T>
-void Heap<T>::InitializeMinHeap()
-//copies list to vector and calls build max heap
-{
-
-  minHeap.push_back("");
-
-  for(int i = 0; i < heapVector.size(); i++)
-  //adds each item in heapvector to maxheap
-  {
-    minHeap.push_back(heapVector.at(i));
-  }
-
-  BuildMinHeap();
-
-  for(int i = 1; i < minHeap.size(); i++)
-  //adds each item in maxheap to heapvector
-  {
-    heapVector.at(i - 1) = minHeap.at(i);
-  }
-
-  for (int i = 0; i < heapVector.size(); i++)
-  //prints each word in list
-  {
-    cout << i << ") " << heapVector.at(i) << "\n";
-  }
-
-} //end of initialize max heap
-
-template<typename T>
-void Heap<T>::BuildMinHeap()
-//builds max heap
-{
-    int n = minHeap.size();
-
-    for(int i = n; i >= 1; i--)
-    //iterates over max heapify
-    {
-        MinHeapify(i);
-    }
-
-} //end of build max heap
-
-template<typename T>
-void Heap<T>::MinHeapify(int i)
-//min heapify  function
-{
-  int l, r, smallest;
-  T temp;
-  smallest = i;
-  l = Left(i);
-  r = Right(i);
-
-  if((l < minHeap.size()) && (minHeap.at(l) < minHeap.at(smallest)))
-  //if left is larger than parent
-  {
-    smallest = l;
-  }
-
-  if(r < minHeap.size() && minHeap.at(r) < minHeap.at(smallest))
-  //if right smaller than current smallest
-  {
-    smallest = r;
-  }
-
-  if(smallest != i)
-  //does the swap, floats down
-  {
-    temp = minHeap.at(i);
-    minHeap.at(i) = minHeap.at(smallest);
-    minHeap.at(smallest) = temp;
-    MinHeapify(smallest);
-  }
-
-} //end min heapify
-
-
-
 //------------------WordList Functions----------------------
 
 WordList::WordList()
@@ -631,7 +410,7 @@ void WordList::printWordList()
 
 }
 
-std::string WordList::getWord(int i, std::string newWord)
+std::string WordList::getWord(int i)
 //returns a word in the array at the given location
 {
   return wordListVector.at(i);
@@ -824,213 +603,19 @@ void WordList::quickSort()
 
 } //end of quicksort
 
-void WordList::heapsort()
-//heap sort
-{
-
-}
-
 //------------------Global Operators------------------------
 std::ostream& operator << (std::ostream & ostr, WordList wordObj)
 //overload << operator for WordList
 {
+
   for(int i = 0; i < wordObj.wordListVector.size(); i++)
   //prints out each word in list
   {
-    ostr << wordObj.getWord(i, "Null") << std::endl;
+    ostr << wordObj.getWord(i) << std::endl;
   }
 
   return ostr;
 } //end of << overload
-
-
-//------------------HashTable Functions--------------------------
-template <typename T>
-HashTable<T>::HashTable()
-{
-    hashTableTable.resize(475255);
-}
-
-template <typename T>
-HashTable<T>::HashTable(std::string fileName)
-{
-    hashTableTable.resize(475255);
-
-    ifstream wordListFile;
-    std::string line;
-    wordListFile.open(fileName);
-
-    if (wordListFile.is_open())
-    //checks that file is open
-    {
-        while (getline(wordListFile,line))
-        //while there are new lines in the file
-        {
-            AddItem(line, Hash(line));
-        }
-
-        wordListFile.close();
-    } //end of if for open file
-
-} //end of load word list function
-
-template <typename T>
-void HashTable<T>::AddItem(T newItem, int location)
-{
-    hashTableTable[location].push_back(newItem);
-}
-
-template <typename T>
-void HashTable<T>::DeleteItem(T itemThatIsDeadToMe)
-{
-    int location = Hash(itemThatIsDeadToMe);
-    for (int i = 0 ; i < hashTableTable[location].size() ; i++){
-        if (hashTableTable[location][i] == itemThatIsDeadToMe){
-            hashTableTable[location].erase(hashTableTable[location].begin()+i);
-
-            //Assumes there is only one copy of each item
-            //Delete the next line if you want to Delete
-            //all copies of an item
-            i = hashTableTable[location].size();
-        }
-    }
-}
-
-template <typename T>
-int HashTable<T>::lookUp(T lookUpItem, int unused, int unused2)
-{
-    int hashTableLocation = Hash(lookUpItem);
-    int lookUpItemLocation = -1;
-    for (int i = 0 ; i < hashTableTable[hashTableLocation].size() ; i++)
-    {
-        if (hashTableTable[hashTableLocation][i] == lookUpItem)
-        //if you found the word
-        {
-            return i;
-        }
-        else
-        //else keep looking
-        {
-            int j = 0;
-            while ((hashTableTable[hashTableLocation][i][j] == lookUpItem[j]) && (j < lookUpItem.size()) )
-            //while the word matches partially
-            {
-                if (j == (lookUpItem.size()-1))
-                //return int to indicate partial match
-                {
-                    lookUpItemLocation = (-2);
-                }
-
-                j++;
-            } //end of while loop
-        }
-    }
-    return lookUpItemLocation;
-}
-
-template <typename T>
-int HashTable<T>::InList(T lookUpItem, int unused, int unused2)
-{
-    int hashTableLocation = Hash(lookUpItem);
-    int lookUpItemLocation = -1;
-    for (int i = 0 ; i < hashTableTable[hashTableLocation].size() ; i++)
-    {
-        if (hashTableTable[hashTableLocation][i] == lookUpItem)
-        //if you found the word
-        {
-            return i;
-        }
-        else
-        //else keep looking
-        {
-            int j = 0;
-            while (hashTableTable[hashTableLocation][i][j] == lookUpItem[j])
-            //while the word matches partially
-            {
-                if (j == (hashTableTable[hashTableLocation][i].size()-1) || j == (lookUpItem.size()-1))
-                //return int to indicate partial match
-                {
-                    lookUpItemLocation = -2;
-                }
-
-                j++;
-            } //end of while loop
-        }
-    }
-    return lookUpItemLocation;
-}
-
-template <typename T>
-int HashTable<T>::Hash(T newItem)
-//Simple hash function, uses the ascii number of the
-//character to make the a number. Must subtract 96
-//so that 'a' = 1 ... then we use each character to
-//make a number the is base 26 where the first characters
-//is the least significant bit.
-{
-    if(strchr(newItem.c_str(), char(39)))
-    {
-        return 0;
-    }
-    if(strchr(newItem.c_str(), char(46)))
-    {
-        return 0;
-    }
-    if(strchr(newItem.c_str(), char(45)))
-    {
-        return 0;
-    }
-    if (newItem.size() <= 1)
-    //The word being hashed is one character long
-    {
-        return int(newItem[0])-96;
-    } else if (newItem.size() == 2)
-    //The word being hashed is two characters long
-    {
-        return (int(newItem[0])-96)+((int(newItem[1])-96)*26);
-    } else if (newItem.size() == 3)
-    //The word being hashed is three characters long
-    {
-        return (int(newItem[0])-96)+((int(newItem[1])-96)*26)+((int(newItem[2])-96)*676);
-    } else
-    //The word being hashed is longer than 3 characters
-    {
-        return (int(newItem[0])-96)+((int(newItem[1])-96)*26)+((int(newItem[2])-96)*676)+((int(newItem[3])-96)*17576);
-    }
-}
-
-template <typename T>
-void HashTable<T>::LoadWords(std::string fileName)
-{
-    ifstream wordListFile;
-    std::string line;
-    wordListFile.open(fileName);
-
-    if (wordListFile.is_open())
-    //checks that file is open
-    {
-        while (getline(wordListFile,line))
-        //while there are new lines in the file
-        {
-            AddItem(line, Hash(line));
-        }
-
-        wordListFile.close();
-    } //end of if for open file
-
-} //end of load word list function
-
-template <typename T>
-int HashTable<T>::getListSize(){
-    return 1;
-}
-
-template <typename T>
-std::string HashTable<T>::getWord(int i, std::string newWord)
-//returns a word in the array at the given location
-{
-  return hashTableTable[Hash(newWord)][i];
-}
 
 //------------------Global Functions------------------------
 bool isOnList(string s, vector<string> foundWords)
@@ -1051,9 +636,7 @@ bool isOnList(string s, vector<string> foundWords)
       return false;
 }
 
-
-template <typename T>
-void FindMatches(T &listObj, Grid &gridObj)
+void FindMatches(WordList &listObj, Grid &gridObj)
 //prints out the word that can be found
 {
     std::vector< std::string > wordsFoundList;
@@ -1092,12 +675,12 @@ void FindMatches(T &listObj, Grid &gridObj)
                     if (loc >= 0)
                     //if you found a word
                     {
-                        if(!isOnList(listObj.getWord(loc, theKey), wordsFoundList))
+                        if(!isOnList(listObj.getWord(loc), wordsFoundList))
                         //if word is not on the list of already found words
                         {
-                          wordsFoundList.push_back(listObj.getWord(loc, theKey));
+                          wordsFoundList.push_back(listObj.getWord(loc));
                           cout << "\nFound a new word ";
-                          cout << listObj.getWord(loc, theKey);
+                          cout << listObj.getWord(loc);
                         }
 
                         loc = -2;
@@ -1126,11 +709,9 @@ void Search(int searchChoice)
 
     std::cout << "Clock time: " << clock() << std::endl;
     clock_t t1,t2, t3, t4, t5, t6;
-
-    HashTable<std::string> newHashTable;
+    t1 = clock();
     Grid newGrid(fileNumber);
     WordList newWords;
-    t1 = clock();
     newWords.loadWordList("wordlist.txt");
     switch (searchChoice)
     //Use user input to choose search
@@ -1141,7 +722,6 @@ void Search(int searchChoice)
             t3 = clock();
             newWords.insertionSort();
             t4 = clock();
-            break;
         }
         case 2:
         //quicksort case
@@ -1149,29 +729,12 @@ void Search(int searchChoice)
             t3 = clock();
             newWords.quickSort();
             t4 = clock();
-            break;
-        }
-        case 3:
-        //HashTable
-        {
-            t3 = clock();
-            newHashTable.LoadWords("wordlist.txt");
-            t4 = clock();
-            break;
         }
 
     } //end of switch statement based on sorting algorithm
 
     t5 = clock();
-    if (searchChoice > 2)
-    {
-        FindMatches(newHashTable, newGrid);
-    } else {
-        cout << "\nFindMatches";
-        FindMatches(newWords, newGrid);
-        cout << "\nFindMatchesDone";
-    }
-
+    FindMatches(newWords, newGrid);
     t6 = clock();
 
     t2 = clock();
@@ -1186,23 +749,17 @@ void Search(int searchChoice)
 
 } //end of search function
 
-
-
 //------------------Main Function--------------------------
 
 int main()
 //main Function
 {
     int sortChoice = 1;
-    /*int sortChoice = 1;
     cout << "\nHi! Which type of sort would you like to implement?\n";
     cout << "Your options are:";
     cout << "\n1) Insertion Sort";
     cout << "\n2) Quick Sort";
-    cout << "\n3) Hash Table";
     cout << "\nIntegers only please!\n";
     cin >> sortChoice;
-    Search(sortChoice);*/
-    Heap<std::string> heapTest;
-    heapTest.loadHeap("wordtest.txt");
+    Search(sortChoice);
 } // end of main function

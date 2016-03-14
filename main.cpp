@@ -605,7 +605,6 @@ void WordList::quickSort()
 std::ostream& operator << (std::ostream & ostr, WordList wordObj)
 //overload << operator for WordList
 {
-
   for(int i = 0; i < wordObj.wordListVector.size(); i++)
   //prints out each word in list
   {
@@ -614,6 +613,195 @@ std::ostream& operator << (std::ostream & ostr, WordList wordObj)
 
   return ostr;
 } //end of << overload
+
+
+//------------------HashTable Functions--------------------------
+template <typename T>
+HashTable<T>::HashTable()
+{
+    hashTableTable.resize(475255);
+}
+
+template <typename T>
+HashTable<T>::HashTable(std::string fileName)
+{
+    hashTableTable.resize(475255);
+
+    ifstream wordListFile;
+    std::string line;
+    wordListFile.open(fileName);
+
+    if (wordListFile.is_open())
+    //checks that file is open
+    {
+        while (getline(wordListFile,line))
+        //while there are new lines in the file
+        {
+            AddItem(line, Hash(line));
+        }
+
+        wordListFile.close();
+    } //end of if for open file
+
+} //end of load word list function
+
+template <typename T>
+void HashTable<T>::AddItem(T newItem, int location)
+{
+    hashTableTable[location].push_back(newItem);
+}
+
+template <typename T>
+void HashTable<T>::DeleteItem(T itemThatIsDeadToMe)
+{
+    int location = Hash(itemThatIsDeadToMe);
+    for (int i = 0 ; i < hashTableTable[location].size() ; i++){
+        if (hashTableTable[location][i] == itemThatIsDeadToMe){
+            hashTableTable[location].erase(hashTableTable[location].begin()+i);
+
+            //Assumes there is only one copy of each item
+            //Delete the next line if you want to Delete
+            //all copies of an item
+            i = hashTableTable[location].size();
+        }
+    }
+}
+
+template <typename T>
+int HashTable<T>::lookUp(T lookUpItem, int unused, int unused2)
+{
+    int hashTableLocation = Hash(lookUpItem);
+    int lookUpItemLocation = -1;
+    for (int i = 0 ; i < hashTableTable[hashTableLocation].size() ; i++)
+    {
+        if (hashTableTable[hashTableLocation][i] == lookUpItem)
+        //if you found the word
+        {
+            return i;
+        }
+        else
+        //else keep looking
+        {
+            int j = 0;
+            while ((hashTableTable[hashTableLocation][i][j] == lookUpItem[j]) && (j < lookUpItem.size()) )
+            //while the word matches partially
+            {
+                if (j == (lookUpItem.size()-1))
+                //return int to indicate partial match
+                {
+                    lookUpItemLocation = (-2);
+                }
+
+                j++;
+            } //end of while loop
+        }
+    }
+    return lookUpItemLocation;
+}
+
+template <typename T>
+int HashTable<T>::InList(T lookUpItem, int unused, int unused2)
+{
+    int hashTableLocation = Hash(lookUpItem);
+    int lookUpItemLocation = -1;
+    for (int i = 0 ; i < hashTableTable[hashTableLocation].size() ; i++)
+    {
+        if (hashTableTable[hashTableLocation][i] == lookUpItem)
+        //if you found the word
+        {
+            return i;
+        }
+        else
+        //else keep looking
+        {
+            int j = 0;
+            while (hashTableTable[hashTableLocation][i][j] == lookUpItem[j])
+            //while the word matches partially
+            {
+                if (j == (hashTableTable[hashTableLocation][i].size()-1) || j == (lookUpItem.size()-1))
+                //return int to indicate partial match
+                {
+                    lookUpItemLocation = -2;
+                }
+
+                j++;
+            } //end of while loop
+        }
+    }
+    return lookUpItemLocation;
+}
+
+template <typename T>
+int HashTable<T>::Hash(T newItem)
+//Simple hash function, uses the ascii number of the
+//character to make the a number. Must subtract 96
+//so that 'a' = 1 ... then we use each character to
+//make a number the is base 26 where the first characters
+//is the least significant bit.
+{
+    if(strchr(newItem.c_str(), char(39)))
+    {
+        return 0;
+    }
+    if(strchr(newItem.c_str(), char(46)))
+    {
+        return 0;
+    }
+    if(strchr(newItem.c_str(), char(45)))
+    {
+        return 0;
+    }
+    if (newItem.size() <= 1)
+    //The word being hashed is one character long
+    {
+        return int(newItem[0])-96;
+    } else if (newItem.size() == 2)
+    //The word being hashed is two characters long
+    {
+        return (int(newItem[0])-96)+((int(newItem[1])-96)*26);
+    } else if (newItem.size() == 3)
+    //The word being hashed is three characters long
+    {
+        return (int(newItem[0])-96)+((int(newItem[1])-96)*26)+((int(newItem[2])-96)*676);
+    } else
+    //The word being hashed is longer than 3 characters
+    {
+        return (int(newItem[0])-96)+((int(newItem[1])-96)*26)+((int(newItem[2])-96)*676)+((int(newItem[3])-96)*17576);
+    }
+}
+
+template <typename T>
+void HashTable<T>::LoadWords(std::string fileName)
+{
+    ifstream wordListFile;
+    std::string line;
+    wordListFile.open(fileName);
+
+    if (wordListFile.is_open())
+    //checks that file is open
+    {
+        while (getline(wordListFile,line))
+        //while there are new lines in the file
+        {
+            AddItem(line, Hash(line));
+        }
+
+        wordListFile.close();
+    } //end of if for open file
+
+} //end of load word list function
+
+template <typename T>
+int HashTable<T>::getListSize(){
+    return 1;
+}
+
+template <typename T>
+std::string HashTable<T>::getWord(int i, std::string newWord)
+//returns a word in the array at the given location
+{
+  return hashTableTable[Hash(newWord)][i];
+}
 
 //------------------Global Functions------------------------
 bool isOnList(string s, vector<string> foundWords)
@@ -633,6 +821,7 @@ bool isOnList(string s, vector<string> foundWords)
 
       return false;
 }
+
 
 template <typename T>
 void FindMatches(T &listObj, Grid &gridObj)
@@ -713,7 +902,6 @@ void Search(int searchChoice)
     Grid newGrid(fileNumber);
     WordList newWords;
     t1 = clock();
-
     newWords.loadWordList("wordlist.txt");
     switch (searchChoice)
     //Use user input to choose search
@@ -724,6 +912,7 @@ void Search(int searchChoice)
             t3 = clock();
             newWords.insertionSort();
             t4 = clock();
+            break;
         }
         case 2:
         //quicksort case
@@ -731,6 +920,7 @@ void Search(int searchChoice)
             t3 = clock();
             newWords.quickSort();
             t4 = clock();
+            break;
         }
         case 3:
         //HashTable
@@ -738,6 +928,7 @@ void Search(int searchChoice)
             t3 = clock();
             newHashTable.LoadWords("wordlist.txt");
             t4 = clock();
+            break;
         }
 
     } //end of switch statement based on sorting algorithm
@@ -746,7 +937,9 @@ void Search(int searchChoice)
     {
         FindMatches(newHashTable, newGrid);
     } else {
+        cout << "\nFindMatches";
         FindMatches(newWords, newGrid);
+        cout << "\nFindMatchesDone";
     }
 
     t6 = clock();
@@ -764,185 +957,6 @@ void Search(int searchChoice)
 } //end of search function
 
 
-//------------------HashTable Functions--------------------------
-template <typename T>
-HashTable<T>::HashTable()
-{
-    hashTableTable.resize(475254);
-}
-
-template <typename T>
-HashTable<T>::HashTable(std::string fileName)
-{
-    hashTableTable.resize(475254);
-
-    ifstream wordListFile;
-    std::string line;
-    wordListFile.open(fileName);
-
-    if (wordListFile.is_open())
-    //checks that file is open
-    {
-        while (getline(wordListFile,line))
-        //while there are new lines in the file
-        {
-            AddItem(line, Hash(line));
-        }
-
-        wordListFile.close();
-    } //end of if for open file
-
-} //end of load word list function
-
-template <typename T>
-void HashTable<T>::AddItem(T newItem, int location)
-{
-    hashTableTable[location].push_back(newItem);
-}
-
-template <typename T>
-void HashTable<T>::DeleteItem(T itemThatIsDeadToMe)
-{
-    int location = Hash(itemThatIsDeadToMe);
-    for (int i = 0 ; i < hashTableTable[location].size() ; i++){
-        if (hashTableTable[location][i] == itemThatIsDeadToMe){
-            hashTableTable[location].erase(hashTableTable[location].begin()+i);
-
-            //Assumes there is only one copy of each item
-            //Delete the next line if you want to Delete
-            //all copies of an item
-            i = hashTableTable[location].size();
-        }
-    }
-}
-
-template <typename T>
-int HashTable<T>::lookUp(T lookUpItem, int unused, int unused2)
-{
-    int hashTableLocation = Hash(lookUpItem);
-    int lookUpItemLocation = -1;
-    for (int i = 0 ; i < hashTableTable[hashTableLocation].size() ; i++)
-    {
-        if (hashTableTable[hashTableLocation][i] == lookUpItem)
-        //if you found the word
-        {
-            return i;
-        }
-        else
-        //else keep looking
-        {
-            int j = 0;
-            while (hashTableTable[hashTableLocation][i][j] == lookUpItem[j])
-            //while the word matches partially
-            {
-                if (j == (hashTableTable[hashTableLocation][i].size()-1) || j == (lookUpItem.size()-1))
-                //return int to indicate partial match
-                {
-                    lookUpItemLocation = -2;
-                }
-
-                j++;
-            } //end of while loop
-        }
-    }
-    return lookUpItemLocation;
-}
-
-template <typename T>
-int HashTable<T>::InList(T lookUpItem, int unused, int unused2)
-{
-    int hashTableLocation = Hash(lookUpItem);
-    int lookUpItemLocation = -1;
-    for (int i = 0 ; i < hashTableTable[hashTableLocation].size() ; i++)
-    {
-        if (hashTableTable[hashTableLocation][i] == lookUpItem)
-        //if you found the word
-        {
-            return i;
-        }
-        else
-        //else keep looking
-        {
-            int j = 0;
-            while (hashTableTable[hashTableLocation][i][j] == lookUpItem[j])
-            //while the word matches partially
-            {
-                if (j == (hashTableTable[hashTableLocation][i].size()-1) || j == (lookUpItem.size()-1))
-                //return int to indicate partial match
-                {
-                    lookUpItemLocation = -2;
-                }
-
-                j++;
-            } //end of while loop
-        }
-    }
-    return lookUpItemLocation;
-}
-
-template <typename T>
-int HashTable<T>::Hash(T newItem)
-//Simple hash function, uses the ascii number of the
-//character to make the a number. Must subtract 96
-//so that 'a' = 1 ... then we use each character to
-//make a number the is base 26 where the first characters
-//is the least significant bit.
-{
-    if(strchr(newItem.c_str(), char(39)))
-    {
-        return 0;
-    }
-    if (newItem.size() <= 1)
-    //The word being hashed is one character long
-    {
-        return int(newItem[0])-96;
-    } else if (newItem.size() == 2)
-    //The word being hashed is two characters long
-    {
-        return (int(newItem[0])-96)+((int(newItem[1])-96)*26);
-    } else if (newItem.size() == 3)
-    //The word being hashed is three characters long
-    {
-        return (int(newItem[0])-96)+((int(newItem[1])-96)*26)+((int(newItem[2])-96)*676);
-    } else
-    //The word being hashed is longer than 3 characters
-    {
-        return (int(newItem[0])-96)+((int(newItem[1])-96)*26)+((int(newItem[2])-96)*676)+((int(newItem[3])-96)*17576);
-    }
-}
-
-template <typename T>
-void HashTable<T>::LoadWords(std::string fileName)
-{
-    ifstream wordListFile;
-    std::string line;
-    wordListFile.open(fileName);
-
-    if (wordListFile.is_open())
-    //checks that file is open
-    {
-        while (getline(wordListFile,line))
-        //while there are new lines in the file
-        {
-            AddItem(line, Hash(line));
-        }
-
-        wordListFile.close();
-    } //end of if for open file
-
-} //end of load word list function
-
-template <typename T>
-int HashTable<T>::getListSize(){
-    return 1;
-}
-
-template <typename T>
-std::string HashTable<T>::getWord(int i, std::string newWord)
-//returns a word in the array at the given location
-{
-  return hashTableTable[Hash(newWord)][i];
-}
 
 //------------------Main Function--------------------------
 

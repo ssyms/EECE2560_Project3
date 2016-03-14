@@ -436,6 +436,12 @@ T Heap<T>::GetItem(int n)
   return heapVector.at(n);
 }
 
+template<typename T>
+int Heap<T>::getSize()
+//size of heap
+{
+  return heapVector.size();
+}
 
 template<typename T>
 void Heap<T>::InitializeMaxHeap()
@@ -458,12 +464,6 @@ void Heap<T>::InitializeMaxHeap()
     heapVector.at(i - 1) = maxHeap.at(i);
   }
 
-  for (int i = 0; i < heapVector.size(); i++)
-  //prints each word in list
-  {
-    cout << i << ") " << heapVector.at(i) << "\n";
-  }
-
 } //end of initialize max heap
 
 template<typename T>
@@ -475,13 +475,13 @@ void Heap<T>::BuildMaxHeap()
     for(int i = n; i >= 1; i--)
     //iterates over max heapify
     {
-        MaxHeapify(i);
+        MaxHeapify(i, n);
     }
 
 } //end of build max heap
 
 template<typename T>
-void Heap<T>::MaxHeapify(int i)
+void Heap<T>::MaxHeapify(int i, int n)
 //max heapify elper function
 {
   int l, r, largest;
@@ -490,13 +490,13 @@ void Heap<T>::MaxHeapify(int i)
   l = Left(i);
   r = Right(i);
 
-  if((l < maxHeap.size()) && (maxHeap.at(l) > maxHeap.at(largest)))
+  if((l < n) && (maxHeap.at(l) > maxHeap.at(largest)))
   //if left is larger than parent
   {
     largest = l;
   }
 
-  if(r < maxHeap.size() && maxHeap.at(r) > maxHeap.at(largest))
+  if(r < n && maxHeap.at(r) > maxHeap.at(largest))
   //if right larger than current largest
   {
     largest = r;
@@ -508,7 +508,7 @@ void Heap<T>::MaxHeapify(int i)
     temp = maxHeap.at(i);
     maxHeap.at(i) = maxHeap.at(largest);
     maxHeap.at(largest) = temp;
-    MaxHeapify(largest);
+    MaxHeapify(largest, n);
   }
 
 } //end max heapify
@@ -532,12 +532,6 @@ void Heap<T>::InitializeMinHeap()
   //adds each item in maxheap to heapvector
   {
     heapVector.at(i - 1) = minHeap.at(i);
-  }
-
-  for (int i = 0; i < heapVector.size(); i++)
-  //prints each word in list
-  {
-    cout << i << ") " << heapVector.at(i) << "\n";
   }
 
 } //end of initialize max heap
@@ -589,7 +583,27 @@ void Heap<T>::MinHeapify(int i)
 
 } //end min heapify
 
+template<typename T>
+void Heap<T>::heapSortHelper()
+//heap sort  function
+{
+  T temp;
+  int n = maxHeap.size() - 1;
+  for (int i = n; i >= 2; i--)
+  {
+      temp = maxHeap.at(i);
+      maxHeap.at(i) = maxHeap.at(1);
+      maxHeap.at(1) = temp;
+      MaxHeapify(1, i - 1);
+  }
 
+  for(int i = 1; i < maxHeap.size(); i++)
+  //adds each item in maxheap to heapvector
+  {
+    heapVector.at(i - 1) = maxHeap.at(i);
+  }
+
+}
 
 //------------------WordList Functions----------------------
 
@@ -826,6 +840,21 @@ void WordList::quickSort()
 
 void WordList::heapsort()
 //heap sort
+{
+  Heap<std::string> myHeap;
+  myHeap.loadHeap("wordtest.txt");
+  myHeap.InitializeMaxHeap();
+  myHeap.heapSortHelper();
+  for(int i = 0; i < myHeap.getSize(); i++)
+  //adds each item in maxheap to heapvector
+  {
+    wordListVector.at(i) = myHeap.GetItem(i);
+  }
+
+}
+
+void maxHeapifyWordlist(int i, int n)
+//heapifies the wordlist
 {
 
 }
@@ -1203,6 +1232,9 @@ int main()
     cout << "\nIntegers only please!\n";
     cin >> sortChoice;
     Search(sortChoice);*/
-    Heap<std::string> heapTest;
-    heapTest.loadHeap("wordtest.txt");
+    WordList words;
+    words.loadWordList("wordtest.txt");
+    words.heapsort();
+    words.printWordList();
+
 } // end of main function

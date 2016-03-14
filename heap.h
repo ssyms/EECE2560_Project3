@@ -33,6 +33,9 @@ class Heap
       //returns the nth item of heap
       T GetItem(int n);
 
+      //size of heapVector
+      int getSize();
+
       //copies list to vector and calls build max heap
       void InitializeMaxHeap();
 
@@ -40,7 +43,7 @@ class Heap
       void BuildMaxHeap();
 
       //max heapifies the heapifies
-      void MaxHeapify(int i);
+      void MaxHeapify(int i, int n);
 
       //copies list to vector and calls build max heap
       void InitializeMinHeap();
@@ -51,9 +54,8 @@ class Heap
       //max heapifies the heapifies
       void MinHeapify(int i);
 
-      //heap sort function
-      void HeapSort();
-
+      //max heapifies the heapifies
+      void heapSortHelper();
 
     private:
 

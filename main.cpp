@@ -444,6 +444,13 @@ int Heap<T>::getSize()
 }
 
 template<typename T>
+void Heap<T>::addItem(T t)
+//size of heap
+{
+  return heapVector.push_back(t);
+}
+
+template<typename T>
 void Heap<T>::InitializeMaxHeap()
 //copies list to vector and calls build max heap
 {
@@ -842,7 +849,11 @@ void WordList::heapsort()
 //heap sort
 {
   Heap<std::string> myHeap;
-  myHeap.loadHeap("wordlist.txt");
+  for(int i = 0; i < wordListVector.size(); i++)
+  //adds each item in maxheap to heapvector
+  {
+    myHeap.addItem(wordListVector.at(i));
+  }
   myHeap.InitializeMaxHeap();
   myHeap.heapSortHelper();
   for(int i = 0; i < myHeap.getSize(); i++)

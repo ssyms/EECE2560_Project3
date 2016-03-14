@@ -33,6 +33,9 @@ class Heap
       //returns the nth item of heap
       T GetItem(int n);
 
+      //adds item to heap
+      void addItem(T t);
+
       //size of heapVector
       int getSize();
 

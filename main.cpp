@@ -1164,6 +1164,8 @@ void Search(int searchChoice)
     cout << "Your options are 15, 30, 50 or 250. Integers only please!\n";
     cin >> fileNumber;
 
+
+
     std::cout << "Clock time: " << clock() << std::endl;
     clock_t t1,t2, t3, t4, t5, t6;
 
@@ -1199,17 +1201,23 @@ void Search(int searchChoice)
             t4 = clock();
             break;
         }
+        case 4:
+        //HashTable
+        {
+            t3 = clock();
+            newWords.heapsort();
+            t4 = clock();
+            break;
+        }
 
     } //end of switch statement based on sorting algorithm
 
     t5 = clock();
-    if (searchChoice > 2)
+    if (searchChoice == 3)
     {
         FindMatches(newHashTable, newGrid);
     } else {
-        cout << "\nFindMatches";
         FindMatches(newWords, newGrid);
-        cout << "\nFindMatchesDone";
     }
 
     t6 = clock();
@@ -1233,19 +1241,16 @@ void Search(int searchChoice)
 int main()
 //main Function
 {
+
     int sortChoice = 1;
-    /*int sortChoice = 1;
     cout << "\nHi! Which type of sort would you like to implement?\n";
     cout << "Your options are:";
     cout << "\n1) Insertion Sort";
     cout << "\n2) Quick Sort";
     cout << "\n3) Hash Table";
+    cout << "\n4) Heap Sort";
     cout << "\nIntegers only please!\n";
     cin >> sortChoice;
-    Search(sortChoice);*/
-    WordList words;
-    words.loadWordList("wordlist.txt");
-    words.heapsort();
-    words.printWordList();
+    Search(sortChoice);
 
 } // end of main function

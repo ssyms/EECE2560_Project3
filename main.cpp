@@ -842,7 +842,7 @@ void WordList::heapsort()
 //heap sort
 {
   Heap<std::string> myHeap;
-  myHeap.loadHeap("wordtest.txt");
+  myHeap.loadHeap("wordlist.txt");
   myHeap.InitializeMaxHeap();
   myHeap.heapSortHelper();
   for(int i = 0; i < myHeap.getSize(); i++)
@@ -1233,7 +1233,7 @@ int main()
     cin >> sortChoice;
     Search(sortChoice);*/
     WordList words;
-    words.loadWordList("wordtest.txt");
+    words.loadWordList("wordlist.txt");
     words.heapsort();
     words.printWordList();
 

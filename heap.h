@@ -40,15 +40,20 @@ class Heap
       void BuildMaxHeap();
 
       //max heapifies the heapifies
-      void MaxHeapify();
+      void MaxHeapify(int i);
 
-      void MaxHeapifyHelper(int i);
+      //copies list to vector and calls build max heap
+      void InitializeMinHeap();
+
+      //builds a max heap
+      void BuildMinHeap();
+
+      //max heapifies the heapifies
+      void MinHeapify(int i);
 
       //heap sort function
       void HeapSort();
 
-      //MaxHeapTest
-      void MaxHeapifyTest();
 
     private:
 
@@ -57,5 +62,8 @@ class Heap
 
       //vector that stores the heap
       std::vector<T> maxHeap;
+
+      //vector that stores the heap
+      std::vector<T> minHeap;
 };
 #endif

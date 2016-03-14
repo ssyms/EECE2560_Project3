@@ -50,9 +50,6 @@ class WordList
     //looks up whether a word is on the list and returns the location
     int lookUp(std::string &keyWord, int upperBound, int lowerBound);
 
-    //heap sort
-    void heapsort();
-
   private:
     //vector to store words in
     std::vector< std::string > wordListVector;

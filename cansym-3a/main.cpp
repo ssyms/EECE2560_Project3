@@ -7,7 +7,6 @@
 // Main program file for homework 3a.
 #include "WordList.h"
 #include "Grid.h"
-#include "heap.h"
 #include <iostream>
 #include <cstdlib>
 #include <time.h>
@@ -371,225 +370,6 @@ std::string Grid::getStringFromGrid(int row, int col, int dir, int length) const
     return gridString;
 
 } //end of getStringFromGri function
-
-//------------------Heap Functions---------------------------
-template<typename T>
-Heap<T>::Heap()
-//default constructor
-{
-
-}
-
-template<typename T>
-void Heap<T>::loadHeap(std::string fileName)
-//constructor that uploads from file
-{
-  ifstream heapFile;
-  std::string line;
-  heapFile.open(fileName);
-  if (heapFile.is_open())
-  //checks that file is open
-  {
-      while (getline(heapFile,line))
-      //while there are new lines in the file
-      {
-          heapVector.push_back(line);
-      }
-
-      heapFile.close();
-  } //end of if for open file
-
-}
-
-//returns the parent of the nth item in heap
-template<typename T>
-int Heap<T>::Parent(int n)
-{
-    int k = n / 2;
-
-    return k;
-}
-
-//returns the left child of the nth item in heap
-template<typename T>
-int Heap<T>::Left(int n)
-{
-    int k = 2 * n;
-
-    return k;
-}
-
-//returns the right child of the nth
-template<typename T>
-int Heap<T>::Right(int n)
-{
-  int k = (2 * n) + 1;
-
-  return k;
-}
-
-//returns the nth item of heap
-template<typename T>
-T Heap<T>::GetItem(int n)
-{
-  return heapVector.at(n);
-}
-
-
-template<typename T>
-void Heap<T>::InitializeMaxHeap()
-//copies list to vector and calls build max heap
-{
-
-  maxHeap.push_back("");
-
-  for(int i = 0; i < heapVector.size(); i++)
-  //adds each item in heapvector to maxheap
-  {
-    maxHeap.push_back(heapVector.at(i));
-  }
-
-  BuildMaxHeap();
-
-  for(int i = 1; i < maxHeap.size(); i++)
-  //adds each item in maxheap to heapvector
-  {
-    heapVector.at(i - 1) = maxHeap.at(i);
-  }
-
-  for (int i = 0; i < heapVector.size(); i++)
-  //prints each word in list
-  {
-    cout << i << ") " << heapVector.at(i) << "\n";
-  }
-
-} //end of initialize max heap
-
-template<typename T>
-void Heap<T>::BuildMaxHeap()
-//builds max heap
-{
-    int n = maxHeap.size();
-
-    for(int i = n; i >= 1; i--)
-    //iterates over max heapify
-    {
-        MaxHeapify(i);
-    }
-
-} //end of build max heap
-
-template<typename T>
-void Heap<T>::MaxHeapify(int i)
-//max heapify elper function
-{
-  int l, r, largest;
-  T temp;
-  largest = i;
-  l = Left(i);
-  r = Right(i);
-
-  if((l < maxHeap.size()) && (maxHeap.at(l) > maxHeap.at(largest)))
-  //if left is larger than parent
-  {
-    largest = l;
-  }
-
-  if(r < maxHeap.size() && maxHeap.at(r) > maxHeap.at(largest))
-  //if right larger than current largest
-  {
-    largest = r;
-  }
-
-  if(largest != i)
-  //does the swap, floats down
-  {
-    temp = maxHeap.at(i);
-    maxHeap.at(i) = maxHeap.at(largest);
-    maxHeap.at(largest) = temp;
-    MaxHeapify(largest);
-  }
-
-} //end max heapify
-
-template<typename T>
-void Heap<T>::InitializeMinHeap()
-//copies list to vector and calls build max heap
-{
-
-  minHeap.push_back("");
-
-  for(int i = 0; i < heapVector.size(); i++)
-  //adds each item in heapvector to maxheap
-  {
-    minHeap.push_back(heapVector.at(i));
-  }
-
-  BuildMinHeap();
-
-  for(int i = 1; i < minHeap.size(); i++)
-  //adds each item in maxheap to heapvector
-  {
-    heapVector.at(i - 1) = minHeap.at(i);
-  }
-
-  for (int i = 0; i < heapVector.size(); i++)
-  //prints each word in list
-  {
-    cout << i << ") " << heapVector.at(i) << "\n";
-  }
-
-} //end of initialize max heap
-
-template<typename T>
-void Heap<T>::BuildMinHeap()
-//builds max heap
-{
-    int n = minHeap.size();
-
-    for(int i = n; i >= 1; i--)
-    //iterates over max heapify
-    {
-        MinHeapify(i);
-    }
-
-} //end of build max heap
-
-template<typename T>
-void Heap<T>::MinHeapify(int i)
-//min heapify  function
-{
-  int l, r, smallest;
-  T temp;
-  smallest = i;
-  l = Left(i);
-  r = Right(i);
-
-  if((l < minHeap.size()) && (minHeap.at(l) < minHeap.at(smallest)))
-  //if left is larger than parent
-  {
-    smallest = l;
-  }
-
-  if(r < minHeap.size() && minHeap.at(r) < minHeap.at(smallest))
-  //if right smaller than current smallest
-  {
-    smallest = r;
-  }
-
-  if(smallest != i)
-  //does the swap, floats down
-  {
-    temp = minHeap.at(i);
-    minHeap.at(i) = minHeap.at(smallest);
-    minHeap.at(smallest) = temp;
-    MinHeapify(smallest);
-  }
-
-} //end min heapify
-
-
-
 //------------------WordList Functions----------------------
 
 WordList::WordList()
@@ -823,12 +603,6 @@ void WordList::quickSort()
 
 } //end of quicksort
 
-void WordList::heapsort()
-//heap sort
-{
-
-}
-
 //------------------Global Operators------------------------
 std::ostream& operator << (std::ostream & ostr, WordList wordObj)
 //overload << operator for WordList
@@ -980,14 +754,12 @@ void Search(int searchChoice)
 int main()
 //main Function
 {
-    /*int sortChoice = 1;
+    int sortChoice = 1;
     cout << "\nHi! Which type of sort would you like to implement?\n";
     cout << "Your options are:";
     cout << "\n1) Insertion Sort";
     cout << "\n2) Quick Sort";
     cout << "\nIntegers only please!\n";
     cin >> sortChoice;
-    Search(sortChoice);*/
-    Heap<std::string> heapTest;
-    heapTest.loadHeap("wordtest.txt");
+    Search(sortChoice);
 } // end of main function
